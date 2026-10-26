@@ -8,17 +8,19 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
 
+    //move
+    private float moveInput;
     private float maxSpeed = 7f;
+
+    //jump
+    private float checkDistance = 0.05f;
     private float acceleration = 35f;
     private float deceleration = 25f;
-    private float moveInput;
-
     [SerializeField] private float jumpForce = 12f;
     [SerializeField] private float jumpCutMultiplier = 0.5f;
 
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask ceilingLayer;
-    private float checkDistance = 0.05f;
 
     private bool isGrounded;
     private bool isTouchingCeiling;
