@@ -26,20 +26,46 @@ public class Player : MonoBehaviour
     [SerializeField] private bool isGrounded;
     [SerializeField] private bool isTouchingCeiling;
 
+    private PlayerInputActions inputActions;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+
+        inputActions = new PlayerInputActions();
+    }
+
+    void OnEnable()
+    {
+        inputActions.Player.Enable();
+
+        // 점프 키를 누르는 순간 OnJumpStarted 함수 실행
+        inputActions.Player.Jump.started += OnJumpStarted;
+        // 점프 키를 떼는 순간 OnJumpCanceled 함수 실행
+        inputActions.Player.Jump.canceled += OnJumpCanceled;
+    }
+
+    void OnDisable()
+    {
+        // 이벤트 구독 해제
+        inputActions.Player.Jump.started -= OnJumpStarted;
+        inputActions.Player.Jump.canceled -= OnJumpCanceled;
+
+        inputActions.Player.Disable();
     }
 
     void Update()
     {
-        if (Keyboard.current == null) return;
+        moveInput = inputActions.Player.Move.ReadValue<float>();
 
-        HandleInput();
         CheckCollisions();
 
-        HandleJump();
+        // 천장에 부딫힐 때
+        if (isTouchingCeiling && rb.linearVelocity.y > 0)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        }
     }
 
     void FixedUpdate()
@@ -47,42 +73,26 @@ public class Player : MonoBehaviour
         HandleMovement();
     }
 
-    private void HandleInput()
+    private void OnJumpStarted(InputAction.CallbackContext context)
     {
-        float move = 0f;
-
-        if (Keyboard.current.leftArrowKey.isPressed) move -= 1f;
-        if (Keyboard.current.rightArrowKey.isPressed) move += 1f;
-
-        moveInput = move;
-    }
-
-    private void HandleJump()
-    {
-        if (Keyboard.current.zKey.wasPressedThisFrame && isGrounded)
+        if (isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
+    }
 
-        // 점프 중 키를 뗐을 때
-        if (Keyboard.current.zKey.wasReleasedThisFrame && rb.linearVelocity.y > 0)
+    private void OnJumpCanceled(InputAction.CallbackContext context)
+    {
+        if (rb.linearVelocity.y > 0)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * jumpCutMultiplier);
-        }
-
-        // 천장에 충돌했을 때
-        if (isTouchingCeiling && rb.linearVelocity.y > 0)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         }
     }
 
     private void HandleMovement()
     {
         float targetSpeed = moveInput * maxSpeed;
-
         float accelRate = (Mathf.Abs(moveInput) > 0.01f) ? acceleration : deceleration;
-
         float newSpeedX = Mathf.MoveTowards(
             rb.linearVelocity.x,
             targetSpeed,
