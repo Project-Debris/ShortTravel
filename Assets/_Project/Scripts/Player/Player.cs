@@ -89,6 +89,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // 이동 함수
     private void HandleMovement()
     {
         float targetSpeed = moveInput * maxSpeed;
@@ -102,6 +103,7 @@ public class Player : MonoBehaviour
         rb.linearVelocity = new Vector2(newSpeedX, rb.linearVelocity.y);
     }
 
+    // 충돌 감지 함수
     private void CheckCollisions()
     {
         Bounds bounds = boxCollider.bounds;
