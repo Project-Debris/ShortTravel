@@ -19,6 +19,7 @@ public class PlayerAttack : MonoBehaviour
 
     private bool isAttacking = false;
     private float nextAttackTime = 0f;
+    private float currentAttackDir = 1f;
 
     private PlayerInputActions inputActions;
 
@@ -51,14 +52,14 @@ public class PlayerAttack : MonoBehaviour
     {
         isAttacking = true;
 
-        float attackDir = GetFacingDirection();
+        currentAttackDir = GetFacingDirection();
         float timer = 0f;
 
         HashSet<Collider2D> hitTargets = new HashSet<Collider2D>();
 
         while (timer < attackDuration)
         {
-            Vector2 attackCenter = (Vector2)transform.position + new Vector2(attackOffset.x * attackDir, attackOffset.y);
+            Vector2 attackCenter = (Vector2)transform.position + new Vector2(attackOffset.x * currentAttackDir, attackOffset.y);
 
             // 범위 내 히트된 enemy들을 관리 - 다단히트 방지
             Collider2D[] hits = Physics2D.OverlapBoxAll(attackCenter, attackSize, 0f, enemyLayer);
@@ -86,7 +87,7 @@ public class PlayerAttack : MonoBehaviour
     // 공격 범위를 확인하기 위한 기즈모
     private void OnDrawGizmosSelected()
     {
-        float dir = Application.isPlaying ? GetFacingDirection() : 1f;
+        float dir = isAttacking ? currentAttackDir : (Application.isPlaying ? GetFacingDirection() : 1f);
         Vector2 center = (Vector2)transform.position + new Vector2(attackOffset.x * dir, attackOffset.y);
 
         Gizmos.color = isAttacking ? Color.red : Color.yellow;
