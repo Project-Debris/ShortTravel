@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &49791589 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1685755455028773677, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+  m_PrefabInstance: {fileID: 1321743044}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &265651459 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 154891762569979653, guid: 0c8f93775ec084145897e27be6e2071e, type: 3}
@@ -782,6 +787,79 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 265651463}
   m_SourcePrefab: {fileID: 100100000, guid: 0c8f93775ec084145897e27be6e2071e, type: 3}
+--- !u!1001 &1321743044
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 88224328737918745, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_Name
+      value: FirePoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 4284732115063330767, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: firePoint
+      value: 
+      objectReference: {fileID: 49791589}
+    - target: {fileID: 4284732115063330767, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4284732115063330767, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 1299842850077344600, guid: feb2ad052da026a44a6f3d12fe5f79ca, type: 3}
+    - target: {fileID: 6351300131188920374, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.629648
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351300131188920374, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.5933049
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351300131188920374, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351300131188920374, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351300131188920374, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351300131188920374, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351300131188920374, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351300131188920374, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351300131188920374, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351300131188920374, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8890407607441229581, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
+      propertyPath: m_Name
+      value: Enemy
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9ec29897946c4944d9938d0936ce63ea, type: 3}
 --- !u!1 &1484810094
 GameObject:
   m_ObjectHideFlags: 0
@@ -927,3 +1005,4 @@ SceneRoots:
   - {fileID: 881015691}
   - {fileID: 1186242040}
   - {fileID: 1144770401}
+  - {fileID: 1321743044}
