@@ -7,8 +7,11 @@ public class PlayerAttack : MonoBehaviour
 {
     [Header("공격 수치")]
     [SerializeField] private float attackDamage = 10f;
-    [SerializeField] private float attackCooldown = 0.35f;
-    [SerializeField] private float attackDuration = 0.15f;
+
+    [Header("공격 타이밍(초)")]
+    [SerializeField] private float startupDelay = 0.08f;
+    [SerializeField] private float activeDuration = 0.1f;
+    [SerializeField] private float recoveryDelay = 0.17f;
 
     [Header("공격 범위")]
     // 플레이어 중심 기준 공격 위치
@@ -18,7 +21,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private LayerMask enemyLayer;
 
     private bool isAttacking = false;
-    private float nextAttackTime = 0f;
+    private bool isActiveFrame = false;
     private float currentAttackDir = 1f;
 
     private PlayerInputActions inputActions;
@@ -48,9 +51,8 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnAttackStarted(InputAction.CallbackContext context)
     {
-        if (Time.time < nextAttackTime || isAttacking) return;
+        if (isAttacking) return;
 
-        nextAttackTime = Time.time + attackCooldown;
         StartCoroutine(AttackRoutine());
     }
 
@@ -59,11 +61,14 @@ public class PlayerAttack : MonoBehaviour
         isAttacking = true;
 
         currentAttackDir = GetFacingDirection();
-        float timer = 0f;
 
+        yield return new WaitForSeconds(startupDelay);
+
+        isActiveFrame = true;
+        float timer = 0f;
         HashSet<Collider2D> hitTargets = new HashSet<Collider2D>();
 
-        while (timer < attackDuration)
+        while (timer < activeDuration)
         {
             Vector2 attackCenter = (Vector2)transform.position + new Vector2(attackOffset.x * currentAttackDir, attackOffset.y);
 
@@ -81,6 +86,10 @@ public class PlayerAttack : MonoBehaviour
             yield return null;
         }
 
+        isActiveFrame = false;
+
+        yield return new WaitForSeconds(recoveryDelay);
+
         isAttacking = false;
     }
 
@@ -96,7 +105,19 @@ public class PlayerAttack : MonoBehaviour
         float dir = isAttacking ? currentAttackDir : (Application.isPlaying ? GetFacingDirection() : 1f);
         Vector2 center = (Vector2)transform.position + new Vector2(attackOffset.x * dir, attackOffset.y);
 
-        Gizmos.color = isAttacking ? Color.red : Color.yellow;
+        if (isActiveFrame)
+        {
+            Gizmos.color = Color.red;
+        }
+        else if (isAttacking)
+        {
+            Gizmos.color = Color.blue;
+        }
+        else
+        {
+            Gizmos.color = Color.yellow;
+        }
+
         Gizmos.DrawWireCube(center, attackSize);
     }
 }
