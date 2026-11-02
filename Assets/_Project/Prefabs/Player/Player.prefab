@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 5738148080927739244}
   - component: {fileID: 8337444281162332476}
   - component: {fileID: -1626218482845850701}
+  - component: {fileID: 623030126098864800}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -211,6 +212,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9506e8939f1969c40b1fe768958af5cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+  maxSpeed: 7
+  acceleration: 35
+  deceleration: 25
   jumpForce: 12
   jumpCutMultiplier: 0.5
   groundLayer:
@@ -219,3 +223,26 @@ MonoBehaviour:
   ceilingLayer:
     serializedVersion: 2
     m_Bits: 512
+  checkDistance: 0.05
+  isGrounded: 0
+  isTouchingCeiling: 0
+--- !u!114 &623030126098864800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4277511626649977987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b95d363a55d674e9faad4b47f48b8273, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  attackDamage: 10
+  attackCooldown: 0.35
+  attackDuration: 0.15
+  attackOffset: {x: 0.8, y: 0}
+  attackSize: {x: 1.2, y: 1}
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
