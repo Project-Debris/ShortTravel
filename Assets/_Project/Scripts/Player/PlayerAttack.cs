@@ -13,8 +13,8 @@ public class PlayerAttack : MonoBehaviour
     [Header("공격 범위")]
     // 플레이어 중심 기준 공격 위치
     [SerializeField] private Vector2 attackOffset = new Vector2(0.8f, 0f);
-    // 공격 범위 크기
-    [SerializeField] private Vector2 attackSize = new Vector2(1.2f, 1.0f);
+    // 공격 범위 크기(기본 값)
+    [SerializeField] private Vector2 attackSize = new Vector2(1.2f, 1.2f);
     [SerializeField] private LayerMask enemyLayer;
 
     private bool isAttacking = false;
@@ -25,6 +25,12 @@ public class PlayerAttack : MonoBehaviour
 
     void Awake()
     {
+        // 높이 계산을 위한 컴포넌트
+        BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
+        // 부모 스케일 반영
+        float playerHeight = boxCollider.size.y * Mathf.Abs(transform.lossyScale.y);
+        attackSize.y = 1.2f * playerHeight;
+
         inputActions = new PlayerInputActions();
     }
 
