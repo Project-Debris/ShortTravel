@@ -79,12 +79,7 @@ public class PlayerAttack : MonoBehaviour
 
     private float GetFacingDirection()
     {
-        // 1) transform.localScale.x를 이용해 좌우를 뒤집을 때
-        // if (transform.localScale.x < 0) return -1f;
-
-        // 2) SpriteRenderer.flipX를 이용해 좌우를 뒤집을 때
-        // if (GetComponent<SpriteRenderer>().flipX) return -1f;
-
+        if (GetComponent<SpriteRenderer>().flipX) return -1f;
         return 1f;
     }
 
