@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
     [Header("컴포넌트")]
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
+    private SpriteRenderer spriteRenderer;
 
     [Header("이동 관련 설정")]
     [SerializeField] private float maxSpeed = 7f;
@@ -32,6 +33,7 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         inputActions = new PlayerInputActions();
     }
@@ -58,6 +60,8 @@ public class Player : MonoBehaviour
     void Update()
     {
         moveInput = inputActions.Player.Move.ReadValue<float>();
+
+        FlipSprite();
 
         CheckCollisions();
 
@@ -86,6 +90,18 @@ public class Player : MonoBehaviour
         if (rb.linearVelocity.y > 0)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * jumpCutMultiplier);
+        }
+    }
+
+    private void FlipSprite()
+    {
+        if (moveInput > 0f)
+        {
+            spriteRenderer.flipX = false;
+        }
+        else if (moveInput < 0f)
+        {
+            spriteRenderer.flipX = true;
         }
     }
 
