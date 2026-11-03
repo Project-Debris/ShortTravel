@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class EnemyAttack : MonoBehaviour
 {
+    [Header("컴포넌트")]
+    private SpriteRenderer spriteRenderer;
+    private EnemyHit enemyHit;
+
     [Header("공격 사거리")]
     [SerializeField] private float attackRange = 5f;
 
@@ -22,11 +26,11 @@ public class EnemyAttack : MonoBehaviour
     private bool isTelegraphing = false;
     private Vector2 lockedDirection;
     private Coroutine attackCoroutine;
-    private SpriteRenderer spriteRenderer;
 
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        enemyHit = GetComponent<EnemyHit>();
 
         firePoint = transform.Find("FirePoint");
 
@@ -36,6 +40,9 @@ public class EnemyAttack : MonoBehaviour
 
     void Update()
     {
+        if (playerTransform == null) return;
+
+        // 플레이어와의 거리 측정
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
 
         if (distanceToPlayer <= attackRange && !isAttacking)
@@ -46,19 +53,12 @@ public class EnemyAttack : MonoBehaviour
 
     private void OnDisable()
     {
-        if (attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-        }
-
-        isAttacking = false;
-        isTelegraphing = false;
-        spriteRenderer.color = Color.white;
+        CancelAttack();
     }
 
-    public void TriggerAttack()
+    private void TriggerAttack()
     {
-        if (isAttacking) return;
+        if (isAttacking || enemyHit.IsStunned) return;
         attackCoroutine = StartCoroutine(AttackRoutine());
     }
 
@@ -85,7 +85,7 @@ public class EnemyAttack : MonoBehaviour
 
         if (projectile.TryGetComponent<Projectile>(out var proj))
         {
-            proj.Initialize(lockedDirection, 10f, 10f);
+            proj.Initialize(lockedDirection, 10f, 10);
         }
 
         yield return new WaitForSeconds(recoveryDuration);
@@ -97,6 +97,21 @@ public class EnemyAttack : MonoBehaviour
         }
 
         isAttacking = false;
+        attackCoroutine = null;
+    }
+
+    public void CancelAttack()
+    {
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+
+        isTelegraphing = false;
+        isAttacking = false;
+
+        spriteRenderer.color = Color.red;
     }
 
     private void OnDrawGizmos()

@@ -15,7 +15,8 @@ public class PlayerHit : MonoBehaviour
     private Health health;
     private Rigidbody2D rb;
 
-    private void Awake() { 
+    private void Awake()
+    {
         health = GetComponent<Health>();
         rb = GetComponent<Rigidbody2D>();
     }
@@ -26,7 +27,7 @@ public class PlayerHit : MonoBehaviour
         if (isInvincible) return;
         health.TakeDamage(damage);
 
-        if(health.IsDead) return; //이번 피해로 사망 시 넉백, 무적, 경직 적용 x
+        if (health.IsDead) return; //이번 피해로 사망 시 넉백, 무적, 경직 적용 x
 
         ApplyKnockback(attackerPosition);
         StartCoroutine(InvincibilityRoutine());

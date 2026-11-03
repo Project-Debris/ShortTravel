@@ -66,7 +66,6 @@ public class PlayerAttack : MonoBehaviour
 
     private IEnumerator AttackRoutine()
     {
-        Debug.Log("루틴 시작");
         isAttacking = true;
 
         // 공격 방향 고정
@@ -87,8 +86,6 @@ public class PlayerAttack : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("공격 시작");
-
         isActiveFrame = true;
 
         // 다단히트 방지를 위한 HashSet
@@ -97,15 +94,12 @@ public class PlayerAttack : MonoBehaviour
         timer = 0f;
         while (timer < activeDuration)
         {
-            Debug.Log("방향 고정");
             Vector2 attackCenter = (Vector2)transform.position + new Vector2(attackOffset.x * currentAttackDir, attackOffset.y);
 
             // 범위 내 히트된 enemy
             Collider2D[] hits = Physics2D.OverlapBoxAll(attackCenter, attackSize, 0f, enemyLayer);
             foreach (Collider2D hit in hits)
             {
-                Debug.Log($"감지된 오브젝트: {hit.name}");
-
                 if (!hitTargets.Contains(hit))
                 {
                     hitTargets.Add(hit);
@@ -113,7 +107,6 @@ public class PlayerAttack : MonoBehaviour
                     if (hit.TryGetComponent<EnemyHit>(out var enemyHit))
                     {
                         enemyHit.TakeHit(attackDamage, transform.position);
-                        Debug.Log("damege");
                     }
                 }
             }
@@ -121,8 +114,6 @@ public class PlayerAttack : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
-
-        Debug.Log("공격 끝");
 
         isActiveFrame = false;
 

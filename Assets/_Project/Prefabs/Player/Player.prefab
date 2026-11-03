@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 3248247842823767959}
   - component: {fileID: -1626218482845850701}
   - component: {fileID: 623030126098864800}
+  - component: {fileID: -1436819519499409653}
   - component: {fileID: 7514433396373298428}
   m_Layer: 6
   m_Name: Player
@@ -308,6 +309,21 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
+--- !u!114 &-1436819519499409653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4277511626649977987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcd528b369b345f47950ccfb3e0e25b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  healthBar: {fileID: 0}
+  maxHealth: 100
+  currentHealth: 100
 --- !u!114 &7514433396373298428
 MonoBehaviour:
   m_ObjectHideFlags: 0
