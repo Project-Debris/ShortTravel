@@ -4,23 +4,34 @@ using System.Collections;
 
 public class EnemyHit : MonoBehaviour
 {
+    [Header("컴포넌트")]
+    private Rigidbody2D rb;
+    private Health health;
+    private EnemyAttack enemyAttack;
+
     [Header("피격 설정")]
     [SerializeField] private float knockbackForce = 3f;//넉백힘(임시값)
     [SerializeField] private float stunnedDuration = 0.15f; //경직시간
 
     public bool IsStunned { get; private set; } //IsStunned를 일반 적 공격, 이동 스크립트에서 읽어서 true이면 공격및이동 불가하도록(경직) 구현해주세요
-    private Health health;
-    private Rigidbody2D rb;
+
     private void Awake()
     {
-        health = GetComponent<Health>();
         rb = GetComponent<Rigidbody2D>();
+        health = GetComponent<Health>();
+        enemyAttack = GetComponent<EnemyAttack>();
     }
 
     public void TakeHit(int damage, Vector2 attackerPosition)//플레이어의 공격 스크립트에서 호출
     {
         if (health.IsDead) return;
         health.TakeDamage(damage);
+
+        if (enemyAttack != null)
+        {
+            enemyAttack.CancelAttack();
+        }
+
         if (health.IsDead) return; //이번 피해로 사망 시 넉백, 경직 적용 x
         ApplyKnockback(attackerPosition);
         StartStunned();

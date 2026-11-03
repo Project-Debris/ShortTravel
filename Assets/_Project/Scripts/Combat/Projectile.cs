@@ -7,10 +7,9 @@ public class Projectile : MonoBehaviour
 
     [Header("기본 설정")]
     [SerializeField] private float speed = 10f;
-    [SerializeField] private float damage;
+    [SerializeField] private int damage;
     // 메모리를 위한 자동 파괴 시간
     [SerializeField] private float lifeTime = 5f;
-
     private Vector2 moveDirection;
 
     void Awake()
@@ -23,7 +22,7 @@ public class Projectile : MonoBehaviour
         rb.linearVelocity = moveDirection * speed;
     }
 
-    public void Initialize(Vector2 direction, float customSpeed, float customDamage)
+    public void Initialize(Vector2 direction, float customSpeed, int customDamage)
     {
         moveDirection = direction.normalized;
         damage = customDamage;
@@ -43,8 +42,13 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.TryGetComponent<PlayerHit>(out var playerHit))
+        {
+            playerHit.TakeHit(damage, transform.position);
+            Destroy(gameObject);
+        }
         // 지형에 부딫히면 파괴
-        if (((1 << collision.gameObject.layer) & LayerMask.GetMask("Ground")) != 0)
+        else if (((1 << collision.gameObject.layer) & LayerMask.GetMask("Ground", "Ceiling")) != 0)
         {
             Destroy(gameObject);
         }
