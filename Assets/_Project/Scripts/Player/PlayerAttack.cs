@@ -51,7 +51,10 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnAttackStarted(InputAction.CallbackContext context)
     {
-        if (isAttacking) return;
+        if (isAttacking || playerHit.IsStunned)
+        {
+            return;
+        }
 
         StartCoroutine(AttackRoutine());
     }

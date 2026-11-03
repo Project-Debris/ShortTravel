@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
     private SpriteRenderer spriteRenderer;
+    private PlayerHit playerHit;
 
     [Header("이동 관련 설정")]
     [SerializeField] private float maxSpeed = 7f;
@@ -79,6 +80,11 @@ public class Player : MonoBehaviour
 
     private void OnJumpStarted(InputAction.CallbackContext context)
     {
+        if (playerHit.IsStunned)
+        {
+            return;
+        }
+
         if (isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
@@ -108,6 +114,11 @@ public class Player : MonoBehaviour
     // 이동 함수
     private void HandleMovement()
     {
+        if (playerHit.IsStunned)
+        {
+            return;
+        }
+
         float targetSpeed = moveInput * maxSpeed;
         float accelRate = (Mathf.Abs(moveInput) > 0.01f) ? acceleration : deceleration;
         float newSpeedX = Mathf.MoveTowards(
