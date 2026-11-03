@@ -100,8 +100,12 @@ public class EnemyAttack : MonoBehaviour
         attackCoroutine = null;
     }
 
-    public void CancelAttack()
+    // 강제 종료 시 true를 인자로 넘기기
+    // Enemy가 죽었을 때 실행하는 함수에 실행해주기
+    public void CancelAttack(bool force = false)
     {
+        if (!force && !isTelegraphing) return;
+
         if (attackCoroutine != null)
         {
             StopCoroutine(attackCoroutine);
