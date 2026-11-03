@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     [SerializeField] private bool isTouchingCeiling;
 
     private PlayerInputActions inputActions;
+    public float MoveInput => moveInput; 
 
     void Awake()
     {
@@ -37,6 +38,8 @@ public class Player : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         inputActions = new PlayerInputActions();
+
+        playerHit = GetComponent<PlayerHit>();
     }
 
     void OnEnable()
