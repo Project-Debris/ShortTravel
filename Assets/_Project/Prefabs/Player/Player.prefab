@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 3248247842823767959}
   - component: {fileID: -1626218482845850701}
   - component: {fileID: 623030126098864800}
+  - component: {fileID: 7514433396373298428}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -299,10 +300,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   attackDamage: 10
-  attackCooldown: 0.35
-  attackDuration: 0.15
+  startupDelay: 0.08
+  activeDuration: 0.1
+  recoveryDelay: 0.17
   attackOffset: {x: 0.8, y: 0}
   attackSize: {x: 1.2, y: 1}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
+--- !u!114 &7514433396373298428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4277511626649977987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6c5d0cd11c2e824fb83d830032e6001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHit
+  invincibilityDuration: 0.5
+  knockbackForce: 5
+  stunnedDuration: 0.1
