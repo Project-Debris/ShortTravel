@@ -269,9 +269,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd86b1d40d5e1a543ad1fe18dcc71991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  target: {fileID: 1691715427}
   player: {fileID: 1691715423}
-  bodyHeight: 1.5
+  bodyCollider: {fileID: 1691715432}
   viewHeight: 10
   baseOffset: {x: 0, y: 1.5}
   lookAhead: 1.5
@@ -467,9 +466,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9506e8939f1969c40b1fe768958af5cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
---- !u!4 &1691715427 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3511229496010280626, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
+--- !u!61 &1691715432 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8337444281162332476, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
   m_PrefabInstance: {fileID: 2628453783505669455}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1998032094
