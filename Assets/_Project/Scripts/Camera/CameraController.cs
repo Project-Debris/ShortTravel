@@ -1,16 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     [Header("추적 대상") ]
-    [SerializeField] private Transform target ; 
-    [SerializeField] private Player player; 
+    
+    [SerializeField] private Player player;
+    [SerializeField] private BoxCollider2D bodyCollider; 
 
     [Header("카메라 수치")]
-    [SerializeField] private float bodyHeight = 1.5f;
     [SerializeField] private float viewHeight = 10f;
     [SerializeField] private Vector2 baseOffset = new Vector2(0f, 1.5f);
     [SerializeField] private float lookAhead = 1.5f;
@@ -19,10 +16,14 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float followTime = 0.2f;
     [SerializeField] private float remainRatio = 0.1f;
 
+    private float bodyHeight;
+    private Vector2 standingCenterOffset;
+
     private Camera cam;
     private int facing;
     private float turnTimer;
     private float lookAheadX;
+
 
     private void Awake()
     {
@@ -31,14 +32,14 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
+        bodyHeight = bodyCollider.size.y * bodyCollider.transform.lossyScale.y;
+        cam.orthographicSize = viewHeight * bodyHeight * 0.5f;
         SnapToTarget();
     }
 
     private void LateUpdate()
     {
         float t = 1f - Mathf.Pow(remainRatio, Time.deltaTime / followTime);
-
-        cam.orthographicSize = viewHeight * bodyHeight * 0.5f;
 
         UpdateFacing(player.MoveInput);
         lookAheadX = Mathf.Lerp(lookAheadX, facing * lookAhead * bodyHeight, t);
@@ -73,7 +74,10 @@ public class CameraController : MonoBehaviour
 
     private Vector3 TargetPosition()
     {
-        Vector2 offset = baseOffset * bodyHeight + new Vector2(lookAheadX, 0f);
-        return new Vector3(target.position.x + offset.x, target.position.y + offset.y, transform.position.z);
+        Vector2 center = bodyCollider.transform.TransformPoint(standingCenterOffset);
+        return new Vector3(
+            center.x + lookAheadX,
+            center.y + baseOffset.y * bodyHeight,
+            transform.position.z);
     }
 }
