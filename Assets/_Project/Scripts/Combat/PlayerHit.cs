@@ -4,6 +4,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerHit : MonoBehaviour
 {
+    [Header("컴포넌트")]
+    private Rigidbody2D rb;
+    private Health health;
+    private PlayerAttack playerAttack;
+
     [Header("피격 설정")]
     [SerializeField] private float invincibilityDuration = 0.5f;//무적시간
     [SerializeField] private float knockbackForce = 5f;//넉백힘(임시값)
@@ -12,13 +17,11 @@ public class PlayerHit : MonoBehaviour
     private bool isInvincible = false;
     public bool IsStunned { get; private set; } //IsStunned를 Player랑 PlayerAttack스크립트에서 읽어서 true이면 공격및이동 불가하도록(경직) 구현해주세요
 
-    private Health health;
-    private Rigidbody2D rb;
-
     private void Awake()
     {
-        health = GetComponent<Health>();
         rb = GetComponent<Rigidbody2D>();
+        health = GetComponent<Health>();
+        playerAttack = GetComponent<PlayerAttack>();
     }
 
     public void TakeHit(int damage, Vector2 attackerPosition)//적의 공격 스크립트에서 호출
@@ -26,6 +29,11 @@ public class PlayerHit : MonoBehaviour
         if (health.IsDead) return;
         if (isInvincible) return;
         health.TakeDamage(damage);
+
+        if (playerAttack != null)
+        {
+            playerAttack.CancelAttack();
+        }
 
         if (health.IsDead) return; //이번 피해로 사망 시 넉백, 무적, 경직 적용 x
 

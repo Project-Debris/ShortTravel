@@ -4,42 +4,41 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     [Header("컴포넌트")]
-    private Rigidbody2D rb;
+    private Rigidbody2D rd;
     private BoxCollider2D boxCollider;
     private SpriteRenderer spriteRenderer;
     private PlayerHit playerHit;
 
-    [Header("이동 관련 설정")]
+    [Header("이동 설정")]
     [SerializeField] private float maxSpeed = 7f;
     [SerializeField] private float acceleration = 35f;
     [SerializeField] private float deceleration = 25f;
     private float moveInput;
+    public float MoveInput => moveInput;
 
-    [Header("점프 관련 설정")]
+    [Header("점프 설정")]
     [SerializeField] private float jumpForce = 12f;
     [SerializeField] private float jumpCutMultiplier = 0.5f;
 
     [Header("충돌 감지 설정")]
+    [SerializeField] private float collisionCheckDistance = 0.05f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask ceilingLayer;
-    [SerializeField] private float checkDistance = 0.05f;
 
     [Header("현재 상태")]
     [SerializeField] private bool isGrounded;
     [SerializeField] private bool isTouchingCeiling;
 
     private PlayerInputActions inputActions;
-    public float MoveInput => moveInput; 
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rd = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        playerHit = GetComponent<PlayerHit>();
 
         inputActions = new PlayerInputActions();
-
-        playerHit = GetComponent<PlayerHit>();
     }
 
     void OnEnable()
@@ -70,9 +69,9 @@ public class Player : MonoBehaviour
         CheckCollisions();
 
         // 천장에 부딫힐 때
-        if (isTouchingCeiling && rb.linearVelocity.y > 0)
+        if (isTouchingCeiling && rd.linearVelocity.y > 0)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+            rd.linearVelocity = new Vector2(rd.linearVelocity.x, 0f);
         }
     }
 
@@ -83,25 +82,23 @@ public class Player : MonoBehaviour
 
     private void OnJumpStarted(InputAction.CallbackContext context)
     {
-        if (playerHit.IsStunned)
-        {
-            return;
-        }
+        if (playerHit.IsStunned) return;
 
         if (isGrounded)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            rd.linearVelocity = new Vector2(rd.linearVelocity.x, jumpForce);
         }
     }
 
     private void OnJumpCanceled(InputAction.CallbackContext context)
     {
-        if (rb.linearVelocity.y > 0)
+        if (rd.linearVelocity.y > 0)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * jumpCutMultiplier);
+            rd.linearVelocity = new Vector2(rd.linearVelocity.x, rd.linearVelocity.y * jumpCutMultiplier);
         }
     }
 
+    // 이동 방향에 맞게 플레이어 방향 수정
     private void FlipSprite()
     {
         if (moveInput > 0f)
@@ -114,23 +111,20 @@ public class Player : MonoBehaviour
         }
     }
 
-    // 이동 함수
+    // 플레이어 이동 함수
     private void HandleMovement()
     {
-        if (playerHit.IsStunned)
-        {
-            return;
-        }
+        if (playerHit.IsStunned) return;
 
         float targetSpeed = moveInput * maxSpeed;
         float accelRate = (Mathf.Abs(moveInput) > 0.01f) ? acceleration : deceleration;
         float newSpeedX = Mathf.MoveTowards(
-            rb.linearVelocity.x,
+            rd.linearVelocity.x,
             targetSpeed,
             accelRate * Time.fixedDeltaTime
         );
 
-        rb.linearVelocity = new Vector2(newSpeedX, rb.linearVelocity.y);
+        rd.linearVelocity = new Vector2(newSpeedX, rd.linearVelocity.y);
     }
 
     // 충돌 감지 함수
@@ -144,7 +138,7 @@ public class Player : MonoBehaviour
             new Vector2(bounds.size.x * 0.9f, bounds.size.y),
             0f,
             Vector2.down,
-            checkDistance,
+            collisionCheckDistance,
             groundLayer
         );
         isGrounded = groundHit.collider != null;
@@ -155,7 +149,7 @@ public class Player : MonoBehaviour
             new Vector2(bounds.size.x * 0.9f, bounds.size.y),
             0f,
             Vector2.up,
-            checkDistance,
+            collisionCheckDistance,
             ceilingLayer
         );
         isTouchingCeiling = ceilingHit.collider != null;

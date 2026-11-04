@@ -279,13 +279,13 @@ MonoBehaviour:
   deceleration: 25
   jumpForce: 12
   jumpCutMultiplier: 0.5
+  collisionCheckDistance: 0.05
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
   ceilingLayer:
     serializedVersion: 2
     m_Bits: 512
-  checkDistance: 0.05
   isGrounded: 0
   isTouchingCeiling: 0
 --- !u!114 &623030126098864800

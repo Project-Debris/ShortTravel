@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,10 +26,12 @@ public class PlayerAttack : MonoBehaviour
 
     [Header("플레이어 공격 상태")]
     private bool isAttacking = false;
-    private bool isActiveFrame = false;
+    private bool isStartup = false;
+    private bool isActive = false;
+    private bool isRecovery = false;
 
     private float currentAttackDir = 1f;
-
+    private Coroutine attackCoroutine;
     private PlayerInputActions inputActions;
 
     void Awake()
@@ -53,23 +54,22 @@ public class PlayerAttack : MonoBehaviour
 
     void OnDisable()
     {
+        CancelAttack();
+
         inputActions.Player.Attack.started -= OnAttackStarted;
         inputActions.Player.Disable();
     }
 
     private void OnAttackStarted(InputAction.CallbackContext context)
     {
-        if (isAttacking || playerHit.IsStunned)
-        {
-            return;
-        }
-
-        StartCoroutine(AttackRoutine());
+        if (isAttacking || playerHit.IsStunned) return;
+        attackCoroutine = StartCoroutine(AttackRoutine());
     }
 
     private IEnumerator AttackRoutine()
     {
         isAttacking = true;
+        isStartup = true;
 
         // 공격 방향 고정
         currentAttackDir = GetFacingDirection();
@@ -79,17 +79,12 @@ public class PlayerAttack : MonoBehaviour
         // startupDelay 시간 동안 피격 시 공격 취소
         while (timer < startupDelay)
         {
-            if (playerHit.IsStunned)
-            {
-                isAttacking = false;
-                yield break;
-            }
-
             timer += Time.deltaTime;
             yield return null;
         }
 
-        isActiveFrame = true;
+        isStartup = false;
+        isActive = true;
 
         // 다단히트 방지를 위한 HashSet
         HashSet<Collider2D> hitTargets = new HashSet<Collider2D>();
@@ -118,10 +113,29 @@ public class PlayerAttack : MonoBehaviour
             yield return null;
         }
 
-        isActiveFrame = false;
+        isActive = false;
+        isRecovery = true;
 
         yield return new WaitForSeconds(recoveryDelay);
 
+        isRecovery = false;
+        isAttacking = false;
+        attackCoroutine = null;
+    }
+
+    public void CancelAttack(bool force = false)
+    {
+        // 회복 단계에서 캔슬 X
+        if (!force && isRecovery) return;
+
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+
+        isStartup = false;
+        isActive = false;
         isAttacking = false;
     }
 
@@ -137,13 +151,17 @@ public class PlayerAttack : MonoBehaviour
         float dir = isAttacking ? currentAttackDir : (Application.isPlaying ? GetFacingDirection() : 1f);
         Vector2 center = (Vector2)transform.position + new Vector2(attackOffset.x * dir, attackOffset.y);
 
-        if (isActiveFrame)
+        if (isStartup)
         {
             Gizmos.color = Color.red;
         }
-        else if (isAttacking)
+        else if (isActive)
         {
             Gizmos.color = Color.blue;
+        }
+        else if (isRecovery)
+        {
+            Gizmos.color = Color.green;
         }
         else
         {

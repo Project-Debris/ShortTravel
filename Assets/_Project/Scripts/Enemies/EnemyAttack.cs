@@ -14,16 +14,18 @@ public class EnemyAttack : MonoBehaviour
 
     [Header("공격 타이밍")]
     [SerializeField] private float telegraphDuration = 0.8f;
-    [SerializeField] private float recoveryDuration = 0.5f;
-    [SerializeField] private float attackCooldown = 2.0f;
+    [SerializeField] private float recoveryDuration = 2.5f;
 
     [Header("투사체 및 위치 설정")]
     [SerializeField] private GameObject projectilePrefab;
     private Transform firePoint;
     private Transform playerTransform;
 
+    [Header("공격 상태")]
     private bool isAttacking = false;
     private bool isTelegraphing = false;
+    private bool isRecovery = false;
+
     private Vector2 lockedDirection;
     private Coroutine attackCoroutine;
 
@@ -88,14 +90,11 @@ public class EnemyAttack : MonoBehaviour
             proj.Initialize(lockedDirection, 10f, 10);
         }
 
+        isRecovery = true;
+
         yield return new WaitForSeconds(recoveryDuration);
 
-        float remainCooldown = attackCooldown - (telegraphDuration + recoveryDuration);
-        if (remainCooldown > 0f)
-        {
-            yield return new WaitForSeconds(remainCooldown);
-        }
-
+        isRecovery = false;
         isAttacking = false;
         attackCoroutine = null;
     }
@@ -124,6 +123,7 @@ public class EnemyAttack : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, attackRange);
 
+        // 투사체 궤적
         Transform currentFirePoint = (firePoint != null) ? firePoint : transform.Find("FirePoint");
         if (currentFirePoint == null)
         {
