@@ -12,8 +12,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float baseOffsetY = 1.5f;
     [SerializeField] private float lookAhead = 1.5f;
 
-    [SerializeField] private float turnDelay = 0.15f;
-    [SerializeField] private float followTime = 0.2f;
+    [SerializeField] private float turnDelay = 0.18f;
+    [SerializeField] private float followTime = 0.23f;
     [SerializeField] private float remainRatio = 0.1f;
 
     private float bodyHeight;
