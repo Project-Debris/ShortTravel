@@ -147,7 +147,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 71edcb8eff01e3f44ad51a1bfdc1b0e0, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -279,8 +279,8 @@ MonoBehaviour:
   maxSpeed: 7
   acceleration: 35
   deceleration: 25
-  jumpForce: 12
-  jumpCutMultiplier: 0.5
+  jumpForce: 6
+  jumpCutMultiplier: 0.3
   collisionCheckDistance: 0.05
   groundLayer:
     serializedVersion: 2
