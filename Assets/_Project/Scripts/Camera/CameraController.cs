@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
 
     [Header("카메라 수치")]
     [SerializeField] private float viewHeight = 10f;
-    [SerializeField] private Vector2 baseOffset = new Vector2(0f, 1.5f);
+    [SerializeField] private float baseOffsetY = 1.5f;
     [SerializeField] private float lookAhead = 1.5f;
 
     [SerializeField] private float turnDelay = 0.15f;
@@ -77,7 +77,7 @@ public class CameraController : MonoBehaviour
         Vector2 center = bodyCollider.transform.TransformPoint(standingCenterOffset);
         return new Vector3(
             center.x + lookAheadX,
-            center.y + baseOffset.y * bodyHeight,
+            center.y + baseOffsetY * bodyHeight,
             transform.position.z);
     }
 }
