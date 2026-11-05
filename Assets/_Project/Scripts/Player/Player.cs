@@ -9,6 +9,9 @@ public class Player : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private PlayerHit playerHit;
 
+    // 방향 확인용 임시
+    [SerializeField] private SpriteRenderer childSpriteRenderer;
+
     [Header("이동 설정")]
     [SerializeField] private float maxSpeed = 7f;
     [SerializeField] private float acceleration = 35f;
@@ -104,10 +107,14 @@ public class Player : MonoBehaviour
         if (moveInput > 0f)
         {
             spriteRenderer.flipX = false;
+            // 임시 코드
+            childSpriteRenderer.flipY = false;
         }
         else if (moveInput < 0f)
         {
             spriteRenderer.flipX = true;
+            // 임시 코드
+            childSpriteRenderer.flipY = true;
         }
     }
 
