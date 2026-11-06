@@ -275,12 +275,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9506e8939f1969c40b1fe768958af5cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  childSpriteRenderer: {fileID: 0}
+  childSpriteRenderer: {fileID: 8650158681487009667}
   maxSpeed: 7
   acceleration: 35
   deceleration: 25
-  jumpForce: 6
-  jumpCutMultiplier: 0.3
+  jumpForce: 12
+  jumpGravity: 1
+  fallGravity: 4
+  jumpCutGravity: 10
   collisionCheckDistance: 0.05
   groundLayer:
     serializedVersion: 2
@@ -288,6 +290,7 @@ MonoBehaviour:
   ceilingLayer:
     serializedVersion: 2
     m_Bits: 512
+  isJumping: 0
   isGrounded: 0
   isTouchingCeiling: 0
 --- !u!114 &623030126098864800

@@ -21,7 +21,9 @@ public class Player : MonoBehaviour
 
     [Header("점프 설정")]
     [SerializeField] private float jumpForce = 12f;
-    [SerializeField] private float jumpCutMultiplier = 0.5f;
+    [SerializeField] private float jumpGravity = 3f;
+    [SerializeField] private float fallGravity = 8f;
+    [SerializeField] private float jumpCutGravity = 12f;
 
     [Header("충돌 감지 설정")]
     [SerializeField] private float collisionCheckDistance = 0.05f;
@@ -29,6 +31,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask ceilingLayer;
 
     [Header("현재 상태")]
+    [SerializeField] private bool isJumping;
     [SerializeField] private bool isGrounded;
     [SerializeField] private bool isTouchingCeiling;
 
@@ -81,6 +84,19 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         HandleMovement();
+
+        if (rd.linearVelocity.y < 0)
+        {
+            rd.gravityScale = fallGravity;
+        }
+        else if (rd.linearVelocity.y > 0 && !isJumping)
+        {
+            rd.gravityScale = jumpCutGravity;
+        }
+        else
+        {
+            rd.gravityScale = jumpGravity;
+        }
     }
 
     private void OnJumpStarted(InputAction.CallbackContext context)
@@ -90,6 +106,7 @@ public class Player : MonoBehaviour
         if (isGrounded)
         {
             rd.linearVelocity = new Vector2(rd.linearVelocity.x, jumpForce);
+            isJumping = true;
         }
     }
 
@@ -97,7 +114,7 @@ public class Player : MonoBehaviour
     {
         if (rd.linearVelocity.y > 0)
         {
-            rd.linearVelocity = new Vector2(rd.linearVelocity.x, rd.linearVelocity.y * jumpCutMultiplier);
+            isJumping = false;
         }
     }
 
