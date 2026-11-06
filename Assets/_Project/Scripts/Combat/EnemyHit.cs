@@ -6,6 +6,7 @@ public class EnemyHit : MonoBehaviour
 {
     [Header("컴포넌트")]
     private Rigidbody2D rb;
+    private SpriteRenderer spriteRenderer;
     private Health health;
     private EnemyAttack enemyAttack;
 
@@ -18,6 +19,7 @@ public class EnemyHit : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         health = GetComponent<Health>();
         enemyAttack = GetComponent<EnemyAttack>();
     }
@@ -31,6 +33,8 @@ public class EnemyHit : MonoBehaviour
         {
             enemyAttack.CancelAttack();
         }
+
+        spriteRenderer.color = Color.orange;
 
         if (health.IsDead) return; //이번 피해로 사망 시 넉백, 경직 적용 x
         ApplyKnockback(attackerPosition);

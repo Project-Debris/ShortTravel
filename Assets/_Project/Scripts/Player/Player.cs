@@ -16,9 +16,9 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer childSpriteRenderer;
 
     [Header("이동 설정")]
-    [SerializeField] private float maxSpeed = 7f;
-    [SerializeField] private float acceleration = 35f;
-    [SerializeField] private float deceleration = 25f;
+    [SerializeField] private float maxSpeed = 7.5f;
+    [SerializeField] private float acceleration = 62.5f;
+    [SerializeField] private float deceleration = 93.75f;
     private float moveInput;
     public float MoveInput => moveInput;
 
@@ -102,6 +102,7 @@ public class Player : MonoBehaviour
             jumpBufferCounter -= Time.deltaTime;
         }
 
+        // 조건 만족 시 점프
         if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
         {
             ExecuteJump();

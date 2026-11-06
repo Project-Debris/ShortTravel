@@ -216,7 +216,6 @@ MonoBehaviour:
   attackRange: 5
   telegraphDuration: 0.8
   recoveryDuration: 0.5
-  attackCooldown: 2
   projectilePrefab: {fileID: 1299842850077344600, guid: feb2ad052da026a44a6f3d12fe5f79ca, type: 3}
 --- !u!114 &-872815706216829267
 MonoBehaviour:

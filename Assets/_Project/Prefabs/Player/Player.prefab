@@ -283,6 +283,8 @@ MonoBehaviour:
   jumpGravity: 1
   fallGravity: 4
   jumpCutGravity: 10
+  coyoteTime: 0.1
+  jumpBuffer: 0.12
   collisionCheckDistance: 0.05
   groundLayer:
     serializedVersion: 2
