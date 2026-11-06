@@ -1,3 +1,6 @@
+// 수치 관련 설정은 캐릭터 사이즈(H)가 정해짐에 따라 수정될 예정
+
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,6 +27,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpGravity = 3f;
     [SerializeField] private float fallGravity = 8f;
     [SerializeField] private float jumpCutGravity = 12f;
+    [SerializeField] private float coyoteTime = 0.1f;
+    [SerializeField] private float jumpBuffer = 0.12f;
+    // 타이머용 변수 2개
+    private float coyoteTimeCounter;
+    private float jumpBufferCounter;
 
     [Header("충돌 감지 설정")]
     [SerializeField] private float collisionCheckDistance = 0.05f;
@@ -79,6 +87,25 @@ public class Player : MonoBehaviour
         {
             rd.linearVelocity = new Vector2(rd.linearVelocity.x, 0f);
         }
+
+        if (isGrounded)
+        {
+            coyoteTimeCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+        }
+
+        if (jumpBufferCounter > 0f)
+        {
+            jumpBufferCounter -= Time.deltaTime;
+        }
+
+        if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
+        {
+            ExecuteJump();
+        }
     }
 
     void FixedUpdate()
@@ -103,11 +130,7 @@ public class Player : MonoBehaviour
     {
         if (playerHit.IsStunned) return;
 
-        if (isGrounded)
-        {
-            rd.linearVelocity = new Vector2(rd.linearVelocity.x, jumpForce);
-            isJumping = true;
-        }
+        jumpBufferCounter = jumpBuffer;
     }
 
     private void OnJumpCanceled(InputAction.CallbackContext context)
@@ -116,6 +139,15 @@ public class Player : MonoBehaviour
         {
             isJumping = false;
         }
+    }
+
+    private void ExecuteJump()
+    {
+        rd.linearVelocity = new Vector2(rd.linearVelocity.x, jumpForce);
+
+        isJumping = true;
+        jumpBufferCounter = 0f;
+        coyoteTimeCounter = 0f;
     }
 
     // 이동 방향에 맞게 플레이어 방향 수정

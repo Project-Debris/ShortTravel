@@ -24,7 +24,7 @@ public class EnemyAttack : MonoBehaviour
     [Header("공격 상태")]
     private bool isAttacking = false;
     private bool isTelegraphing = false;
-    private bool isRecovery = false;
+    //private bool isRecovery = false;
 
     private Vector2 lockedDirection;
     private Coroutine attackCoroutine;
@@ -90,11 +90,11 @@ public class EnemyAttack : MonoBehaviour
             proj.Initialize(lockedDirection, 10f, 10);
         }
 
-        isRecovery = true;
+        //isRecovery = true;
 
         yield return new WaitForSeconds(recoveryDuration);
 
-        isRecovery = false;
+        //isRecovery = false;
         isAttacking = false;
         attackCoroutine = null;
     }

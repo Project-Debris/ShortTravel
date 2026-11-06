@@ -272,7 +272,7 @@ MonoBehaviour:
   player: {fileID: 1691715423}
   bodyCollider: {fileID: 1691715432}
   viewHeight: 10
-  baseOffset: {x: 0, y: 1.5}
+  baseOffsetY: 1.5
   lookAhead: 1.5
   turnDelay: 0.15
   followTime: 0.2
@@ -858,6 +858,10 @@ PrefabInstance:
     - target: {fileID: -1626218482845850701, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -1626218482845850701, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
+      propertyPath: coyoteTime
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: -1436819519499409653, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
       propertyPath: healthBar
