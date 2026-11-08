@@ -44,7 +44,9 @@ public class PlayerHit : MonoBehaviour
 
     private void ApplyKnockback(Vector2 attackerPosition)
     {
-        Vector2 direction = ((Vector2)transform.position - attackerPosition).normalized;
+        float directionX = Mathf.Sign(transform.position.x - attackerPosition.x);
+        Vector2 direction = new Vector2(directionX, 0f);
+
         rb.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
     }
 

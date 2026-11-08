@@ -43,7 +43,9 @@ public class EnemyHit : MonoBehaviour
 
     private void ApplyKnockback(Vector2 attackerPosition)
     {
-        Vector2 direction = ((Vector2)transform.position - attackerPosition).normalized;//넉백 방향
+        float directionX = Mathf.Sign(transform.position.x - attackerPosition.x);
+        Vector2 direction = new Vector2(directionX, 0f);
+
         rb.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
     }
 
