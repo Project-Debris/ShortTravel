@@ -10,6 +10,8 @@ public class PinEnemy : Enemy
     [SerializeField] private float lookInterval = 5.00f;
     [SerializeField] private float detectRange = 6.00f; 
     [SerializeField] private float viewAngle = 60f;   // 부채꼴 전체 각도
+    [SerializeField] private float alertDuration = 0.5f;
+    [SerializeField] private GameObject alertIcon;
 
     // 참조
     private SpriteRenderer spriteRenderer;
@@ -75,13 +77,19 @@ public class PinEnemy : Enemy
 
         if (CanSeePlayer())
         {
+            alertIcon.SetActive(true);
             ChangeState(PinEnemyState.Alert);
         }
     }
 
     private void Alert()
     {
-        
+        spriteRenderer.flipX = player.position.x < transform.position.x;
+
+        if (stateTimer < alertDuration) return;
+
+        alertIcon.SetActive(false);
+        ChangeState(PinEnemyState.Aim);
     }
 
     private void Aim()
