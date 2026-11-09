@@ -42,6 +42,10 @@ public class Player : MonoBehaviour
     [SerializeField] private bool isJumping;
     [SerializeField] private bool isGrounded;
     [SerializeField] private bool isTouchingCeiling;
+    
+
+    public bool IsGrounded => isGrounded;//RepairItemManager에서 읽어야돼서 추가했어요
+
 
     private PlayerInputActions inputActions;
 
