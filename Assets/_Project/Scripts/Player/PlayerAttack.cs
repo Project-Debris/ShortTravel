@@ -30,6 +30,8 @@ public class PlayerAttack : MonoBehaviour
     private bool isActive = false;
     private bool isRecovery = false;
 
+    public bool IsAttacking => isAttacking;//다른곳에서 읽기위해 추가함
+
     private float currentAttackDir = 1f;
     private Coroutine attackCoroutine;
     private PlayerInputActions inputActions;
