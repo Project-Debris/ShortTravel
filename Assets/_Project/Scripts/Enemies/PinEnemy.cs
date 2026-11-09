@@ -4,22 +4,22 @@ public enum PinEnemyState { Idle, Alert, Aim, Lock, Recover, Stunned, Dead }
 
 public class PinEnemy : Enemy
 {
-    private PinEnemyState state;
-
-    // 조정값 ([SerializeField]) - 코드 완성 후 추가 에정.
-    [SerializeField] private float lookInterval = 5.00f;
-    [SerializeField] private float detectRange = 6.00f; 
-    [SerializeField] private float viewAngle = 60f;   // 부채꼴 전체 각도
+    [Header("대기")]
+    [SerializeField] private float lookInterval = 5f;
+    [SerializeField] private float detectRange = 6f;
+    [SerializeField] private float viewAngle = 60f;
+    
+    [Header("발견")]
     [SerializeField] private float alertDuration = 0.5f;
-    [SerializeField] private GameObject alertIcon;
+    
+    [Header("추적 조준")]
+    [SerializeField] private float aimDuration = 0.5f;
 
-    // 참조
+    private PinEnemyState state;
     private SpriteRenderer spriteRenderer;
     private int blockLayer;
-
-
-    // 상태 데이터
-    float stateTimer; 
+    private float stateTimer;
+    private Vector2 aimDirection;
 
     protected override void Awake()
     {
@@ -34,38 +34,15 @@ public class PinEnemy : Enemy
 
         switch (state)
         {
-            case PinEnemyState.Idle:
-                Idle(); 
-                break;
-
-            case PinEnemyState.Alert:
-                Alert();
-                break;
-
-            case PinEnemyState.Aim:
-                Aim();
-                break;
-
-            case PinEnemyState.Lock:
-                Lock();
-                break;
-
-            case PinEnemyState.Recover:
-                Recover();
-                break;
-
-            case PinEnemyState.Stunned:
-                Stunned();
-                break;
-
-            case PinEnemyState.Dead:
-                Dead();
-                break;
-
+            case PinEnemyState.Idle: Idle(); break;
+            case PinEnemyState.Alert: Alert(); break;
+            case PinEnemyState.Aim: Aim(); break;
+            case PinEnemyState.Lock: Lock(); break;
+            case PinEnemyState.Recover: Recover(); break;
+            case PinEnemyState.Stunned: Stunned(); break;
+            case PinEnemyState.Dead: Dead(); break;
         }
     }
-
-    // 상태별 함수 (UpdateIdle, UpdateAim ...)
 
     private void Idle()
     {
@@ -75,44 +52,32 @@ public class PinEnemy : Enemy
             stateTimer = 0f;
         }
 
-        if (CanSeePlayer())
+        Vector2 toPlayer = player.position - transform.position;
+        Vector2 facing = spriteRenderer.flipX ? Vector2.left : Vector2.right;
+
+        if (Vector2.Angle(facing, toPlayer) <= viewAngle * 0.5f && CanSeePlayer(toPlayer))
         {
-            alertIcon.SetActive(true);
+            aimDirection = toPlayer;
             ChangeState(PinEnemyState.Alert);
         }
     }
 
     private void Alert()
     {
-        spriteRenderer.flipX = player.position.x < transform.position.x;
-
-        if (stateTimer < alertDuration) return;
-
-        alertIcon.SetActive(false);
-        ChangeState(PinEnemyState.Aim);
+        Track();
+        if (stateTimer >= alertDuration) ChangeState(PinEnemyState.Aim);
     }
 
     private void Aim()
     {
+        Track();
+        if (stateTimer >= aimDuration) ChangeState(PinEnemyState.Lock);
     }
 
-    private void Lock()
-    {
-    }
-
-    private void Recover()
-    {
-    }
-
-    private void Stunned()
-    {
-    }
-
-    private void Dead()
-    {
-    }
-
-    // 공통 도우미 (ChangeState, CanSeePlayer 
+    private void Lock() { }
+    private void Recover() { }
+    private void Stunned() { }
+    private void Dead() { }
 
     private void ChangeState(PinEnemyState next)
     {
@@ -120,14 +85,19 @@ public class PinEnemy : Enemy
         stateTimer = 0f;
     }
 
-    private bool CanSeePlayer()
+    private void Track()
     {
         Vector2 toPlayer = player.position - transform.position;
+        if (CanSeePlayer(toPlayer)) aimDirection = toPlayer;
 
-        if (toPlayer.sqrMagnitude > detectRange * detectRange) return false;
-        if (Vector2.Angle(spriteRenderer.flipX ? Vector2.left : Vector2.right, toPlayer) > viewAngle * 0.5f) return false;
+        spriteRenderer.flipX = aimDirection.x < 0;
+        Debug.DrawRay(transform.position, aimDirection, Color.blue);
+    }
 
-        return !Physics2D.Raycast(transform.position, toPlayer, toPlayer.magnitude, blockLayer);
+    private bool CanSeePlayer(Vector2 toPlayer)
+    {
+        return toPlayer.sqrMagnitude <= detectRange * detectRange
+            && !Physics2D.Raycast(transform.position, toPlayer, toPlayer.magnitude, blockLayer);
     }
 
 #if UNITY_EDITOR
@@ -139,6 +109,4 @@ public class PinEnemy : Enemy
         UnityEditor.Handles.DrawSolidArc(transform.position, Vector3.forward, Quaternion.Euler(0, 0, -viewAngle * 0.5f) * facing, viewAngle, detectRange);
     }
 #endif
-
 }
-
