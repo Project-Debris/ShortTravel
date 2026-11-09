@@ -1,6 +1,3 @@
-// 수치 관련 설정은 캐릭터 사이즈(H)가 정해짐에 따라 수정될 예정
-
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +8,7 @@ public class Player : MonoBehaviour
     private BoxCollider2D boxCollider;
     private SpriteRenderer spriteRenderer;
     private PlayerHit playerHit;
+    private Repair repair;
 
     // 방향 확인용 임시
     [SerializeField] private SpriteRenderer childSpriteRenderer;
@@ -41,11 +39,8 @@ public class Player : MonoBehaviour
     [Header("현재 상태")]
     [SerializeField] private bool isJumping;
     [SerializeField] private bool isGrounded;
+    public bool IsGrounded => isGrounded;
     [SerializeField] private bool isTouchingCeiling;
-    
-
-    public bool IsGrounded => isGrounded;//RepairItemManager에서 읽어야돼서 추가했어요
-
 
     private PlayerInputActions inputActions;
 
@@ -55,6 +50,7 @@ public class Player : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerHit = GetComponent<PlayerHit>();
+        repair = GetComponent<Repair>();
 
         inputActions = new PlayerInputActions();
     }
@@ -80,9 +76,11 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        moveInput = inputActions.Player.Move.ReadValue<float>();
-
-        FlipSprite();
+        if (!repair.IsRepairing)
+        {
+            moveInput = inputActions.Player.Move.ReadValue<float>();
+            FlipSprite();
+        }
 
         CheckCollisions();
 
@@ -115,7 +113,10 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        HandleMovement();
+        if (!repair.IsRepairing)
+        {
+            HandleMovement();
+        }
 
         if (rd.linearVelocity.y < 0)
         {
@@ -133,7 +134,7 @@ public class Player : MonoBehaviour
 
     private void OnJumpStarted(InputAction.CallbackContext context)
     {
-        if (playerHit.IsStunned) return;
+        if (playerHit.IsStunned || repair.IsRepairing) return;
 
         jumpBufferCounter = jumpBuffer;
     }

@@ -107,6 +107,8 @@ GameObject:
   - component: {fileID: 623030126098864800}
   - component: {fileID: -1436819519499409653}
   - component: {fileID: 7514433396373298428}
+  - component: {fileID: -748087355969958937}
+  - component: {fileID: -1357510563517967378}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -331,6 +333,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   maxHealth: 100
   currentHealth: 100
+  isDead: 0
 --- !u!114 &7514433396373298428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,6 +349,35 @@ MonoBehaviour:
   invincibilityDuration: 0.5
   knockbackForce: 5
   stunnedDuration: 0.1
+--- !u!114 &-748087355969958937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4277511626649977987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5ae01ef93c2fd46b9cef4198d0eb64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Repair
+  playerHealth: {fileID: 0}
+  repairProgressText: {fileID: 0}
+  repairDuration: 1
+  healAmount: 40
+--- !u!114 &-1357510563517967378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4277511626649977987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29268d95b3fdcdd4c8a4bc3089e4049a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RepairItemManager
+  repairItemCount: 0
 --- !u!1 &9137071592299421106
 GameObject:
   m_ObjectHideFlags: 0
