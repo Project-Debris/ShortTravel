@@ -4,32 +4,53 @@ public enum PinEnemyState { Idle, Alert, Aim, Lock, Recover, Stunned, Dead }
 
 public class PinEnemy : Enemy
 {
-    [Header("대기")]
+    [Header("1. 대기")]
     [SerializeField] private float lookInterval = 5f;
     [SerializeField] private float detectRange = 6f;
     [SerializeField] private float viewAngle = 60f;
-    
-    [Header("발견")]
+
+    [Header("2. 발견")]
     [SerializeField] private float alertDuration = 0.5f;
-    
-    [Header("추적 조준")]
+
+    [Header("3. 추적 조준")]
     [SerializeField] private float aimDuration = 0.5f;
+
+    [Header("4. 방향 고정")]
+    [SerializeField] private float lockDuration = 1.00f;
+
+    [Header("5. 발사·회복")]
+    [SerializeField] private float attackInterval = 1.00f;
+
+
 
     private PinEnemyState state;
     private SpriteRenderer spriteRenderer;
     private int blockLayer;
     private float stateTimer;
     private Vector2 aimDirection;
+    private PinLauncher pinAttack;
+    private PartSteal partSteal;
+
 
     protected override void Awake()
     {
         base.Awake();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        pinAttack = GetComponent<PinLauncher>();
+        partSteal = GetComponent<PartSteal>();
         blockLayer = LayerMask.GetMask("Block");
     }
 
     private void Update()
     {
+        if (state != PinEnemyState.Dead && health.IsDead)
+        {
+            ChangeState(PinEnemyState.Dead);
+            partSteal.BeginSteal();
+        }
+        else if (state != PinEnemyState.Stunned && hit.IsStunned)
+            ChangeState(PinEnemyState.Stunned);
+
         stateTimer += Time.deltaTime;
 
         switch (state)
@@ -74,10 +95,28 @@ public class PinEnemy : Enemy
         if (stateTimer >= aimDuration) ChangeState(PinEnemyState.Lock);
     }
 
-    private void Lock() { }
-    private void Recover() { }
-    private void Stunned() { }
-    private void Dead() { }
+    private void Lock()
+    {
+        if (stateTimer < lockDuration) return;
+
+        pinAttack.PinAttack(aimDirection);
+        ChangeState(PinEnemyState.Recover);
+    }
+
+    private void Recover()
+    {
+        if (stateTimer >= attackInterval) ResumeCombat();
+    }
+
+    private void Stunned()
+    {
+        if (!hit.IsStunned) ResumeCombat();
+    }
+
+    private void Dead()
+    {
+
+    }
 
     private void ChangeState(PinEnemyState next)
     {
@@ -99,6 +138,13 @@ public class PinEnemy : Enemy
         return toPlayer.sqrMagnitude <= detectRange * detectRange
             && !Physics2D.Raycast(transform.position, toPlayer, toPlayer.magnitude, blockLayer);
     }
+
+    private void ResumeCombat()
+    {
+        Vector2 toPlayer = player.position - transform.position;
+        ChangeState(CanSeePlayer(toPlayer) ? PinEnemyState.Aim : PinEnemyState.Idle);
+    }
+
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
