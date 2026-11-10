@@ -8,6 +8,7 @@ public class PlayerAttack : MonoBehaviour
     [Header("컴포넌트")]
     private BoxCollider2D boxCollider;
     private PlayerHit playerHit;
+    private Repair repair;
 
     [Header("공격 수치")]
     [SerializeField] private int attackDamage = 10;
@@ -26,6 +27,7 @@ public class PlayerAttack : MonoBehaviour
 
     [Header("플레이어 공격 상태")]
     private bool isAttacking = false;
+    public bool IsAttacking => isAttacking;
     private bool isStartup = false;
     private bool isActive = false;
     private bool isRecovery = false;
@@ -62,7 +64,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnAttackStarted(InputAction.CallbackContext context)
     {
-        if (isAttacking || playerHit.IsStunned) return;
+        if (isAttacking || playerHit.IsStunned || repair.IsRepairing) return;
         attackCoroutine = StartCoroutine(AttackRoutine());
     }
 

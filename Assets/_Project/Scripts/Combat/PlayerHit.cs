@@ -8,6 +8,7 @@ public class PlayerHit : MonoBehaviour
     private Rigidbody2D rb;
     private Health health;
     private PlayerAttack playerAttack;
+    private Repair repair;
 
     [Header("피격 설정")]
     [SerializeField] private float invincibilityDuration = 0.5f;//무적시간
@@ -22,6 +23,7 @@ public class PlayerHit : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         health = GetComponent<Health>();
         playerAttack = GetComponent<PlayerAttack>();
+        repair = GetComponent<Repair>();    
     }
 
     public void TakeHit(int damage, Vector2 attackerPosition)//적의 공격 스크립트에서 호출
@@ -40,11 +42,15 @@ public class PlayerHit : MonoBehaviour
         ApplyKnockback(attackerPosition);
         StartCoroutine(InvincibilityRoutine());
         StartCoroutine(StunnedRoutine());
+
+        repair.CancelUse();
     }
 
     private void ApplyKnockback(Vector2 attackerPosition)
     {
-        Vector2 direction = ((Vector2)transform.position - attackerPosition).normalized;
+        float directionX = Mathf.Sign(transform.position.x - attackerPosition.x);
+        Vector2 direction = new Vector2(directionX, 0f);
+
         rb.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
     }
 
