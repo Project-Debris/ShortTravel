@@ -9,37 +9,52 @@ public class PartSteal : MonoBehaviour
 
     [Header("사망 전환")]
     [SerializeField] private float deathTransitionDuration = 0.5f;
+    [SerializeField] private Color deadTint = new Color(0.35f, 0.35f, 0.35f, 1f);
 
     [Header("표시")]
     [SerializeField] private GameObject glow;
     [SerializeField] private GameObject prompt;
 
     private bool isStealable;
+    private SpriteRenderer spriteRenderer;
+    private EnemyAttack enemyAttack;
 
     public PartType PartType => partType;
     public int MaxUses => maxUses;
 
     private void Awake()
     {
-        glow.SetActive(false);
-        prompt.SetActive(false);
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        enemyAttack = GetComponent<EnemyAttack>();
+
+        SetGlow(false);
+        SetPrompt(false);
     }
 
     public void BeginSteal()
     {
+        StopAttacking();
         BecomePassable();
         StartCoroutine(EnableStealAfterTransition());
     }
 
     public bool CanSteal() => isStealable;
 
-    public void ShowPrompt(bool visible) => prompt.SetActive(visible);
+    public void ShowPrompt(bool visible) => SetPrompt(visible);
 
     public void CompleteSteal()
     {
         isStealable = false;
-        glow.SetActive(false);
-        prompt.SetActive(false);
+        SetGlow(false);
+        SetPrompt(false);
+    }
+
+    private void StopAttacking()
+    {
+        if (enemyAttack == null) return;
+
+        enemyAttack.CancelAttack(true);
+        enemyAttack.enabled = false;
     }
 
     private void BecomePassable()
@@ -53,8 +68,31 @@ public class PartSteal : MonoBehaviour
 
     private IEnumerator EnableStealAfterTransition()
     {
-        yield return new WaitForSeconds(deathTransitionDuration);
+        Color startColor = spriteRenderer != null ? spriteRenderer.color : Color.white;
+        Color endColor = startColor * deadTint;
+
+        float timer = 0f;
+        while (timer < deathTransitionDuration)
+        {
+            timer += Time.deltaTime;
+            if (spriteRenderer != null)
+                spriteRenderer.color = Color.Lerp(startColor, endColor, timer / deathTransitionDuration);
+            yield return null;
+        }
+
+        if (spriteRenderer != null) spriteRenderer.color = endColor;
+
         isStealable = true;
-        glow.SetActive(true);
+        SetGlow(true);
+    }
+
+    private void SetGlow(bool active)
+    {
+        if (glow != null) glow.SetActive(active);
+    }
+
+    private void SetPrompt(bool active)
+    {
+        if (prompt != null) prompt.SetActive(active);
     }
 }
