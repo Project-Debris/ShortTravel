@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 7416951384459505987}
   - component: {fileID: 3574964348929625287}
   - component: {fileID: 8266335410861219262}
+  - component: {fileID: 5839871175504952035}
   - component: {fileID: 4284732115063330767}
   - component: {fileID: -872815706216829267}
   - component: {fileID: 2978291029639176905}
@@ -388,6 +389,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &5839871175504952035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8890407607441229581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39e1acf2c258c1c49b445d2dd5d81745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PinEnemy
+  lookInterval: 2
+  detectRange: 6
+  viewAngle: 60
+  alertDuration: 0.5
+  aimDuration: 0.5
+  lockDuration: 1
+  attackInterval: 1
 --- !u!114 &4284732115063330767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,7 +466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f2853a885277af42aa426faab5d6a00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PinLauncher
-  pinPrefab: {fileID: 0}
+  pinPrefab: {fileID: 5905126746044608848, guid: 8ad5ceab719eaf24fbf69296153c19e2, type: 3}
   pinSpeed: 10
   pinDamage: 10
   firePoint: {fileID: 0}
@@ -485,5 +505,5 @@ MonoBehaviour:
   maxUses: 3
   deathTransitionDuration: 0.5
   deadTint: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-  glow: {fileID: 0}
-  prompt: {fileID: 0}
+  glow: {fileID: 8405334006449793605}
+  prompt: {fileID: 627262019926628475}
