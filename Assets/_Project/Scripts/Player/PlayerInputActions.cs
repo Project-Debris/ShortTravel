@@ -131,6 +131,26 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""PartSteal"",
+                    ""type"": ""Button"",
+                    ""id"": ""ec07c602-31b0-4b1f-88db-dd28282f724e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""PartAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""2f76c646-997d-4579-a7a1-3e9a03713495"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -199,6 +219,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Interaction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f1087708-eba9-4305-996a-c94e899fb875"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PartSteal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""24c08b51-773d-41af-97fd-e25bfad37bda"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PartAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -211,6 +253,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Interaction = m_Player.FindAction("Interaction", throwIfNotFound: true);
+        m_Player_PartSteal = m_Player.FindAction("PartSteal", throwIfNotFound: true);
+        m_Player_PartAttack = m_Player.FindAction("PartAttack", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -295,6 +339,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Interaction;
+    private readonly InputAction m_Player_PartSteal;
+    private readonly InputAction m_Player_PartAttack;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -322,6 +368,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Interaction".
         /// </summary>
         public InputAction @Interaction => m_Wrapper.m_Player_Interaction;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/PartSteal".
+        /// </summary>
+        public InputAction @PartSteal => m_Wrapper.m_Player_PartSteal;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/PartAttack".
+        /// </summary>
+        public InputAction @PartAttack => m_Wrapper.m_Player_PartAttack;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -360,6 +414,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interaction.started += instance.OnInteraction;
             @Interaction.performed += instance.OnInteraction;
             @Interaction.canceled += instance.OnInteraction;
+            @PartSteal.started += instance.OnPartSteal;
+            @PartSteal.performed += instance.OnPartSteal;
+            @PartSteal.canceled += instance.OnPartSteal;
+            @PartAttack.started += instance.OnPartAttack;
+            @PartAttack.performed += instance.OnPartAttack;
+            @PartAttack.canceled += instance.OnPartAttack;
         }
 
         /// <summary>
@@ -383,6 +443,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interaction.started -= instance.OnInteraction;
             @Interaction.performed -= instance.OnInteraction;
             @Interaction.canceled -= instance.OnInteraction;
+            @PartSteal.started -= instance.OnPartSteal;
+            @PartSteal.performed -= instance.OnPartSteal;
+            @PartSteal.canceled -= instance.OnPartSteal;
+            @PartAttack.started -= instance.OnPartAttack;
+            @PartAttack.performed -= instance.OnPartAttack;
+            @PartAttack.canceled -= instance.OnPartAttack;
         }
 
         /// <summary>
@@ -451,5 +517,19 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteraction(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PartSteal" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPartSteal(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PartAttack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPartAttack(InputAction.CallbackContext context);
     }
 }
