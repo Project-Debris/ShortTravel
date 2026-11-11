@@ -47,10 +47,16 @@ public class EnemyAttack : MonoBehaviour
         // 플레이어와의 거리 측정
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
 
-        if (distanceToPlayer <= attackRange && !isAttacking)
+        if (distanceToPlayer <= attackRange && !isAttacking && CanSeePlayer())
         {
             TriggerAttack();
         }
+    }
+
+    private bool CanSeePlayer()
+    {
+        Vector2 toPlayer = playerTransform.position - transform.position;
+        return !Physics2D.Raycast(transform.position, toPlayer, toPlayer.magnitude, LayerMask.GetMask("Block"));
     }
 
     private void OnDisable()

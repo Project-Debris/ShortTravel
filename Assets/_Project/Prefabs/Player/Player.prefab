@@ -109,6 +109,9 @@ GameObject:
   - component: {fileID: 7514433396373298428}
   - component: {fileID: -748087355969958937}
   - component: {fileID: -1357510563517967378}
+  - component: {fileID: 667404333329007411}
+  - component: {fileID: 431949365273767130}
+  - component: {fileID: 3426681954777035660}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -378,6 +381,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RepairItemManager
   repairItemCount: 0
+--- !u!114 &667404333329007411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4277511626649977987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e15d619a3a4ab5c42ba8abb6ef9e357c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PartSlot
+  pinPrefab: {fileID: -4928000704599195127, guid: 28af60a62cbf6e54c942650a2f7b2c87, type: 3}
+  pinSpeed: 10
+  pinDamage: 10
+--- !u!114 &431949365273767130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4277511626649977987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 895f796d3c438c04b8f272bfa0995eea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PartStealer
+  stealRange: 1.5
+  holdDuration: 0.5
+  corpseLayer:
+    serializedVersion: 2
+    m_Bits: 128
+--- !u!114 &3426681954777035660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4277511626649977987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f2853a885277af42aa426faab5d6a00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PinLauncher
+  pinPrefab: {fileID: 0}
+  pinSpeed: 10
+  pinDamage: 10
+  firePoint: {fileID: 0}
 --- !u!1 &9137071592299421106
 GameObject:
   m_ObjectHideFlags: 0
