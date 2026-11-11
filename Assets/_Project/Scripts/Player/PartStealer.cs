@@ -8,6 +8,7 @@ public class PartStealer : MonoBehaviour
     [SerializeField] private LayerMask corpseLayer;
 
     private Player player;
+    private Repair repair;
     private PlayerAttack playerAttack;
     private PlayerHit playerHit;
     private PartSlot partSlot;
@@ -15,6 +16,7 @@ public class PartStealer : MonoBehaviour
 
     private PartSteal target;
     private bool isHolding;
+    public bool IsHolding => isHolding;
     private float holdTimer;
 
     private void Awake()
@@ -23,6 +25,7 @@ public class PartStealer : MonoBehaviour
         playerAttack = GetComponent<PlayerAttack>();
         playerHit = GetComponent<PlayerHit>();
         partSlot = GetComponent<PartSlot>();
+        repair = GetComponent<Repair>();
         inputActions = new PlayerInputActions();
     }
 
@@ -39,7 +42,7 @@ public class PartStealer : MonoBehaviour
 
         SetTarget(FindNearestCorpse());
 
-        if (inputActions.Player.Interaction.WasPressedThisFrame() && CanStartHold())
+        if (inputActions.Player.PartSteal.WasPressedThisFrame() && CanStartHold())
             StartHold();
     }
 
@@ -48,7 +51,8 @@ public class PartStealer : MonoBehaviour
         return target != null
             && player.IsGrounded
             && !playerAttack.IsAttacking
-            && !playerHit.IsStunned;
+            && !playerHit.IsStunned
+            && !repair.IsRepairing;
     }
 
     private void StartHold()
@@ -73,7 +77,7 @@ public class PartStealer : MonoBehaviour
     {
         return target == null
             || !target.CanSteal()
-            || !inputActions.Player.Interaction.IsPressed()
+            || !inputActions.Player.PartSteal.IsPressed()
             || player.MoveInput != 0f
             || playerHit.IsStunned;
     }
@@ -96,7 +100,10 @@ public class PartStealer : MonoBehaviour
             if (!hit.TryGetComponent(out PartSteal corpse) || !corpse.CanSteal()) continue;
 
             float sqrDistance = ((Vector2)(corpse.transform.position - transform.position)).sqrMagnitude;
-            if (sqrDistance < nearestSqrDistance)
+            bool isCloser = sqrDistance < nearestSqrDistance;
+            bool isTieWithCurrent = Mathf.Approximately(sqrDistance, nearestSqrDistance) && corpse == target;
+
+            if (isCloser || isTieWithCurrent)
             {
                 nearest = corpse;
                 nearestSqrDistance = sqrDistance;
