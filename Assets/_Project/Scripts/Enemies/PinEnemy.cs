@@ -85,13 +85,13 @@ public class PinEnemy : Enemy
 
     private void Alert()
     {
-        Track();
+        if (!Track()) { ChangeState(PinEnemyState.Idle); return; }
         if (stateTimer >= alertDuration) ChangeState(PinEnemyState.Aim);
     }
 
     private void Aim()
     {
-        Track();
+        if (!Track()) { ChangeState(PinEnemyState.Idle); return; }
         if (stateTimer >= aimDuration) ChangeState(PinEnemyState.Lock);
     }
 
@@ -124,13 +124,15 @@ public class PinEnemy : Enemy
         stateTimer = 0f;
     }
 
-    private void Track()
+    private bool Track()
     {
         Vector2 toPlayer = player.position - transform.position;
-        if (CanSeePlayer(toPlayer)) aimDirection = toPlayer;
+        bool canSee = CanSeePlayer(toPlayer);
+        if (canSee) aimDirection = toPlayer;
 
         spriteRenderer.flipX = aimDirection.x < 0;
-        Debug.DrawRay(transform.position, aimDirection, Color.blue);
+        Debug.DrawRay(transform.position, aimDirection, canSee ? Color.blue : Color.gray);
+        return canSee;
     }
 
     private bool CanSeePlayer(Vector2 toPlayer)
