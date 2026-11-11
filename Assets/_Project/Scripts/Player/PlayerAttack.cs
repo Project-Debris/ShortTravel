@@ -40,6 +40,7 @@ public class PlayerAttack : MonoBehaviour
     {
         boxCollider = GetComponent<BoxCollider2D>();
         playerHit = GetComponent<PlayerHit>();
+        repair = GetComponent<Repair>(); 
 
         // 공격 범위 y값 설정 - 부모 스케일 반영
         float playerHeight = boxCollider.size.y * Mathf.Abs(transform.lossyScale.y);
