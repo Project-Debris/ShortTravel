@@ -123,6 +123,7 @@ public class Player : MonoBehaviour
             HandleMovement();
         }
 
+        // 중력
         if (rd.linearVelocity.y < 0)
         {
             rd.gravityScale = fallGravity;
@@ -130,6 +131,12 @@ public class Player : MonoBehaviour
         else if (rd.linearVelocity.y > 0 && !isJumping)
         {
             rd.gravityScale = jumpCutGravity;
+        }
+        else if (rd.linearVelocity.y > 0 && isJumping)
+        {
+            float progress = Mathf.InverseLerp(jumpForce, 0f, rd.linearVelocity.y);
+
+            rd.gravityScale = Mathf.Lerp(jumpGravity, fallGravity, progress);
         }
         else
         {
