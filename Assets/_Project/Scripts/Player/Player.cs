@@ -14,17 +14,17 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer childSpriteRenderer;
 
     [Header("이동 설정")]
-    [SerializeField] private float maxSpeed = 7.5f;
-    [SerializeField] private float acceleration = 62.5f;
-    [SerializeField] private float deceleration = 93.75f;
+    [SerializeField] private float maxSpeed = 7f;
+    [SerializeField] private float acceleration = 35f;
+    [SerializeField] private float deceleration = 25f;
     private float moveInput;
     public float MoveInput => moveInput;
 
     [Header("점프 설정")]
     [SerializeField] private float jumpForce = 12f;
-    [SerializeField] private float jumpGravity = 3f;
-    [SerializeField] private float fallGravity = 8f;
-    [SerializeField] private float jumpCutGravity = 12f;
+    [SerializeField] private float jumpGravity = 1f;
+    [SerializeField] private float fallGravity = 4f;
+    [SerializeField] private float jumpCutGravity = 10f;
     [SerializeField] private float coyoteTime = 0.1f;
     [SerializeField] private float jumpBuffer = 0.12f;
     // 타이머용 변수 2개
@@ -84,6 +84,11 @@ public class Player : MonoBehaviour
 
         CheckCollisions();
 
+        if (isGrounded && rd.linearVelocity.y <= 0.01f)
+        {
+            isJumping = false;
+        }
+
         // 천장에 부딫힐 때
         if (isTouchingCeiling && rd.linearVelocity.y > 0)
         {
@@ -136,14 +141,17 @@ public class Player : MonoBehaviour
     {
         if (playerHit.IsStunned || repair.IsRepairing) return;
 
+        isJumping = true;
         jumpBufferCounter = jumpBuffer;
     }
 
     private void OnJumpCanceled(InputAction.CallbackContext context)
     {
+        isJumping = false;
+
         if (rd.linearVelocity.y > 0)
         {
-            isJumping = false;
+
         }
     }
 
@@ -151,7 +159,8 @@ public class Player : MonoBehaviour
     {
         rd.linearVelocity = new Vector2(rd.linearVelocity.x, jumpForce);
 
-        isJumping = true;
+        isJumping = inputActions.Player.Jump.IsPressed();
+
         jumpBufferCounter = 0f;
         coyoteTimeCounter = 0f;
     }
