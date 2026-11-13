@@ -9,11 +9,11 @@ public class CameraController : MonoBehaviour
 
     [Header("카메라 수치")]
     [SerializeField] private float viewHeight = 10f;
-    [SerializeField] private float baseOffsetY = 1.5f;
-    [SerializeField] private float lookAhead = 1.5f;
+    [SerializeField] private float baseOffsetY = 2.0f;
+    [SerializeField] private float lookAhead = 1.0f;
 
-    [SerializeField] private float turnDelay = 0.18f;
-    [SerializeField] private float followTime = 0.23f;
+    [SerializeField] private float turnDelay = 0.23f;
+    [SerializeField] private float followTime = 0.4f;
     [SerializeField] private float remainRatio = 0.1f;
 
     private float bodyHeight;
