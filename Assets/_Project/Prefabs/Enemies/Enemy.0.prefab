@@ -226,7 +226,6 @@ GameObject:
   - component: {fileID: 3574964348929625287}
   - component: {fileID: 8266335410861219262}
   - component: {fileID: 5839871175504952035}
-  - component: {fileID: 4284732115063330767}
   - component: {fileID: 2978291029639176905}
   - component: {fileID: -872815706216829267}
   - component: {fileID: 6770190602606952211}
@@ -407,22 +406,6 @@ MonoBehaviour:
   aimDuration: 0.5
   lockDuration: 1
   attackInterval: 1
---- !u!114 &4284732115063330767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8890407607441229581}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d60e825b2672743a3f2b83917ac747, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
-  attackRange: 5
-  telegraphDuration: 0.8
-  recoveryDuration: 0.5
-  projectilePrefab: {fileID: 1299842850077344600, guid: feb2ad052da026a44a6f3d12fe5f79ca, type: 3}
 --- !u!114 &2978291029639176905
 MonoBehaviour:
   m_ObjectHideFlags: 0
