@@ -227,13 +227,12 @@ GameObject:
   - component: {fileID: 8266335410861219262}
   - component: {fileID: 5839871175504952035}
   - component: {fileID: 4284732115063330767}
-  - component: {fileID: -872815706216829267}
   - component: {fileID: 2978291029639176905}
+  - component: {fileID: -872815706216829267}
   - component: {fileID: 6770190602606952211}
-  - component: {fileID: 1136942937908174371}
   - component: {fileID: 410829551346665872}
   m_Layer: 7
-  m_Name: Enemy
+  m_Name: Enemy.0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -415,7 +414,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8890407607441229581}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3d60e825b2672743a3f2b83917ac747, type: 3}
   m_Name: 
@@ -424,6 +423,20 @@ MonoBehaviour:
   telegraphDuration: 0.8
   recoveryDuration: 0.5
   projectilePrefab: {fileID: 1299842850077344600, guid: feb2ad052da026a44a6f3d12fe5f79ca, type: 3}
+--- !u!114 &2978291029639176905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8890407607441229581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af2a715ba55f8114c80365eef0b4026e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHit
+  knockbackForce: 3
+  stunnedDuration: 0.15
 --- !u!114 &-872815706216829267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,20 +453,6 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 100
   isDead: 0
---- !u!114 &2978291029639176905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8890407607441229581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af2a715ba55f8114c80365eef0b4026e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHit
-  knockbackForce: 3
-  stunnedDuration: 0.15
 --- !u!114 &6770190602606952211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,25 +469,6 @@ MonoBehaviour:
   pinSpeed: 10
   pinDamage: 10
   firePoint: {fileID: 0}
---- !u!114 &1136942937908174371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8890407607441229581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39e1acf2c258c1c49b445d2dd5d81745, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PinEnemy
-  lookInterval: 5
-  detectRange: 6
-  viewAngle: 60
-  alertDuration: 0.5
-  aimDuration: 0.5
-  lockDuration: 1
-  attackInterval: 1
 --- !u!114 &410829551346665872
 MonoBehaviour:
   m_ObjectHideFlags: 0
