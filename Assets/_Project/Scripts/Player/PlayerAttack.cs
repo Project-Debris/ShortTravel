@@ -12,6 +12,7 @@ public class PlayerAttack : MonoBehaviour
 
     [Header("공격 수치")]
     [SerializeField] private int attackDamage = 10;
+    [SerializeField] private float knockbackForce = 3f;
 
     [Header("공격 타이밍(초)")]
     [SerializeField] private float startupDelay = 0.08f;
@@ -40,7 +41,7 @@ public class PlayerAttack : MonoBehaviour
     {
         boxCollider = GetComponent<BoxCollider2D>();
         playerHit = GetComponent<PlayerHit>();
-        repair = GetComponent<Repair>(); 
+        repair = GetComponent<Repair>();
 
         // 공격 범위 y값 설정 - 부모 스케일 반영
         float playerHeight = boxCollider.size.y * Mathf.Abs(transform.lossyScale.y);
@@ -107,7 +108,7 @@ public class PlayerAttack : MonoBehaviour
 
                     if (hit.TryGetComponent<EnemyHit>(out var enemyHit))
                     {
-                        enemyHit.TakeHit(attackDamage, transform.position);
+                        enemyHit.TakeHit(attackDamage, transform.position, knockbackForce);
                     }
                 }
             }

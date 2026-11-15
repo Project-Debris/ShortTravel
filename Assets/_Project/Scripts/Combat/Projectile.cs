@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
     [Header("기본 설정")]
     [SerializeField] private float speed = 10f;
     [SerializeField] private int damage;
+    [SerializeField] private float knockbackForce = 3f;
     // 메모리를 위한 자동 파괴 시간
     [SerializeField] private float lifeTime = 5f;
     private Vector2 moveDirection;
@@ -44,7 +45,7 @@ public class Projectile : MonoBehaviour
     {
         if (collision.TryGetComponent<PlayerHit>(out var playerHit))
         {
-            playerHit.TakeHit(damage, transform.position);
+            playerHit.TakeHit(damage, transform.position, knockbackForce);
             Destroy(gameObject);
         }
         // 지형에 부딫히면 파괴
