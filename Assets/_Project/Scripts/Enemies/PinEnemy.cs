@@ -7,7 +7,7 @@ public class PinEnemy : Enemy
     [Header("1. 대기")]
     [SerializeField] private float lookInterval = 5f;
     [SerializeField] private float detectRange = 6f;
-    [SerializeField] private float viewAngle = 60f;
+    [SerializeField] private float viewAngle = 150f;
 
     [Header("2. 발견")]
     [SerializeField] private float alertDuration = 0.5f;
