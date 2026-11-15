@@ -34,7 +34,6 @@ public class Player : MonoBehaviour
     [Header("충돌 감지 설정")]
     [SerializeField] private float collisionCheckDistance = 0.05f;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private LayerMask ceilingLayer;
 
     [Header("현재 상태")]
     [SerializeField] private bool isJumping;
@@ -228,7 +227,7 @@ public class Player : MonoBehaviour
             0f,
             Vector2.up,
             collisionCheckDistance,
-            ceilingLayer
+            groundLayer
         );
         isTouchingCeiling = ceilingHit.collider != null;
     }
