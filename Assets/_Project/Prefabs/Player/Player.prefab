@@ -294,9 +294,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
-  ceilingLayer:
-    serializedVersion: 2
-    m_Bits: 512
   isJumping: 0
   isGrounded: 0
   isTouchingCeiling: 0
@@ -335,7 +332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   healthBar: {fileID: 0}
   maxHealth: 100
-  currentHealth: 100
+  currentHealth: 10
   isDead: 0
 --- !u!114 &7514433396373298428
 MonoBehaviour:
@@ -364,8 +361,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5ae01ef93c2fd46b9cef4198d0eb64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Repair
-  playerHealth: {fileID: 0}
-  repairProgressText: {fileID: 0}
+  playerHealth: {fileID: -1436819519499409653}
+  repairProgressText: {fileID: 1878706963797807430, guid: 1c76f01afb07add4bb62c0c0a288a683, type: 3}
   repairDuration: 1
   healAmount: 40
 --- !u!114 &-1357510563517967378
@@ -380,7 +377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29268d95b3fdcdd4c8a4bc3089e4049a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RepairItemManager
-  repairItemCount: 0
+  repairItemCount: 3
 --- !u!114 &667404333329007411
 MonoBehaviour:
   m_ObjectHideFlags: 0

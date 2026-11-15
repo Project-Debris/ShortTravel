@@ -121,6 +121,10 @@ public class Player : MonoBehaviour
         {
             HandleMovement();
         }
+        else
+        {
+            rd.linearVelocity = new Vector2(0f, rd.linearVelocity.y);
+        }
 
         // 중력
         if (rd.linearVelocity.y < 0)
