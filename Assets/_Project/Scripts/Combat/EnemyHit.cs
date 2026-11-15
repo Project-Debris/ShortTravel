@@ -24,7 +24,7 @@ public class EnemyHit : MonoBehaviour
         enemyAttack = GetComponent<EnemyAttack>();
     }
 
-    public void TakeHit(int damage, Vector2 attackerPosition)//플레이어의 공격 스크립트에서 호출
+    public void TakeHit(int damage, Vector2 attackDirection, float knockbackForce)//플레이어의 공격 스크립트에서 호출
     {
         if (health.IsDead) return;
         health.TakeDamage(damage);
@@ -37,13 +37,13 @@ public class EnemyHit : MonoBehaviour
         spriteRenderer.color = Color.orange;
 
         if (health.IsDead) return; //이번 피해로 사망 시 넉백, 경직 적용 x
-        ApplyKnockback(attackerPosition);
+        ApplyKnockback(attackDirection, knockbackForce);
         StartStunned();
     }
 
-    private void ApplyKnockback(Vector2 attackerPosition)
+    private void ApplyKnockback(Vector2 attackDirection, float knockbackForce)
     {
-        float directionX = Mathf.Sign(transform.position.x - attackerPosition.x);
+        float directionX = attackDirection.normalized.x;
         Vector2 direction = new Vector2(directionX, 0f);
 
         rb.AddForce(direction * knockbackForce, ForceMode2D.Impulse);

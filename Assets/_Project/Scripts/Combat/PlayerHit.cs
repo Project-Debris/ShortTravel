@@ -26,7 +26,7 @@ public class PlayerHit : MonoBehaviour
         repair = GetComponent<Repair>();    
     }
 
-    public void TakeHit(int damage, Vector2 attackerPosition)//적의 공격 스크립트에서 호출
+    public void TakeHit(int damage, Vector2 attackDirection, float knockbackForce)//적의 공격 스크립트에서 호출
     {
         if (health.IsDead) return;
         if (isInvincible) return;
@@ -39,16 +39,16 @@ public class PlayerHit : MonoBehaviour
 
         if (health.IsDead) return; //이번 피해로 사망 시 넉백, 무적, 경직 적용 x
 
-        ApplyKnockback(attackerPosition);
+        ApplyKnockback(attackDirection, knockbackForce);
         StartCoroutine(InvincibilityRoutine());
         StartCoroutine(StunnedRoutine());
 
         repair.CancelUse();
     }
 
-    private void ApplyKnockback(Vector2 attackerPosition)
+    private void ApplyKnockback(Vector2 attackDirection, float knockbackForce)//공격자의 위치가 아닌 공격 방향과 넉백 힘 입력 받는 것으로 수정함
     {
-        float directionX = Mathf.Sign(transform.position.x - attackerPosition.x);
+        float directionX = attackDirection.normalized.x;
         Vector2 direction = new Vector2(directionX, 0f);
 
         rb.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
