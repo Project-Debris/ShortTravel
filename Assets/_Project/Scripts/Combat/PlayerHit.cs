@@ -76,7 +76,7 @@ public class PlayerHit : MonoBehaviour
         // 테스트용: 1 키를 누르면 플레이어 피격
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
-            TakeHit(10, (Vector2)transform.position + Vector2.right);
+            TakeHit(10, (Vector2)transform.position + Vector2.right, knockbackForce);
         }
     }
 }

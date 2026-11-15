@@ -73,7 +73,7 @@ public class EnemyHit : MonoBehaviour
         // 테스트용: 2 키를 누르면 적 피격
         if (Keyboard.current.digit2Key.wasPressedThisFrame)
         {
-            TakeHit(10, (Vector2)transform.position + Vector2.left);
+            TakeHit(10, (Vector2)transform.position + Vector2.left, knockbackForce);
         }
     }
 }

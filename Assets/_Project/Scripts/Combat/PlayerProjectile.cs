@@ -5,6 +5,7 @@ public class PlayerProjectile : MonoBehaviour
     [SerializeField] private float speed = 10f;
     [SerializeField] private int damage = 10;
     [SerializeField] private float lifeTime = 5f;
+    [SerializeField] private float knockbackForce = 3f;
 
     private Rigidbody2D rb;
     private Vector2 moveDirection;
@@ -38,7 +39,7 @@ public class PlayerProjectile : MonoBehaviour
             && collision.TryGetComponent<Health>(out var health)
             && !health.IsDead)
         {
-            enemyHit.TakeHit(damage, transform.position);
+            enemyHit.TakeHit(damage, transform.position, knockbackForce);
             Destroy(gameObject);
         }
 
