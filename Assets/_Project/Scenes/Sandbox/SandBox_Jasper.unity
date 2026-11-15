@@ -15989,30 +15989,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -1626218482845850701, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -1626218482845850701, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
-      propertyPath: coyoteTime
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: -1436819519499409653, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 2051082996}
-    - target: {fileID: -1436819519499409653, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 623030126098864800, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3248247842823767959, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3511229496010280626, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9.97
@@ -16056,10 +16036,6 @@ PrefabInstance:
     - target: {fileID: 4277511626649977987, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7514433396373298428, guid: 62ee963d69ba0504cabf0278f234ce83, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
