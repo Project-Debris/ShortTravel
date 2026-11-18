@@ -14,7 +14,7 @@ public class Room : MonoBehaviour
     }
 
     [SerializeField] private string roomId = "room";
-    [Tooltip("시작하자마자 진입 처리?")]
+    [Tooltip("첫 스타트 Room? ")]
     [SerializeField] private bool playerStartsInside = true;
     [SerializeField] private EnemySpawn[] enemySpawns = Array.Empty<EnemySpawn>();
     [SerializeField] private BoxCollider2D cameraBounds;

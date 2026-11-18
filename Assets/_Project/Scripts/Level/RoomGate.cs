@@ -11,21 +11,32 @@ public class RoomGate : MonoBehaviour
     [SerializeField] private RoomGateSide sideRight;
     [SerializeField] private Room roomRight;
 
-    private RoomGateSide lastTouched;
+    private bool playerInLeft;
+    private bool playerInRight;
 
-    public void OnPlayerTouched(RoomGateSide side)
+    public void OnPlayerEnter(RoomGateSide side) => SetPlayerIn(side, true);
+
+    public void OnPlayerExit(RoomGateSide side)
     {
-        bool crossed = lastTouched != null && lastTouched != side;
-        lastTouched = side;
-        if (!crossed) return;
+        SetPlayerIn(side, false);
+        if (playerInLeft || playerInRight) return;
 
-        if (side == sideRight) MoveBetween(roomLeft, roomRight);
-        else if (side == sideRight) MoveBetween(roomRight, roomLeft);
+        if (side == sideLeft) MoveInto(roomLeft, roomRight);
+        else if (side == sideRight) MoveInto(roomRight, roomLeft);
     }
 
-    private static void MoveBetween(Room from, Room to)
+    private void SetPlayerIn(RoomGateSide side, bool isIn)
     {
+        if (side == sideLeft) playerInLeft = isIn;
+        else if (side == sideRight) playerInRight = isIn;
+    }
+
+    private static void MoveInto(Room to, Room from)
+    {
+        if (to != null && to.IsPlayerInside) return;
+
         if (from != null) from.Exit();
         if (to != null) to.Enter();
     }
+
 }

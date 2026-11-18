@@ -14,8 +14,17 @@ public class RoomGateSide : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 플레이어 콜라이더가 자식에 있어도 Rigidbody가 붙은 루트의 태그로 판별
+        if (IsPlayer(other)) gate.OnPlayerEnter(this);
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (IsPlayer(other)) gate.OnPlayerExit(this);
+    }
+
+    private static bool IsPlayer(Collider2D other)
+    {
         Rigidbody2D body = other.attachedRigidbody;
-        if (body != null && body.CompareTag("Player")) gate.OnPlayerTouched(this);
+        return body != null && body.CompareTag("Player");
     }
 }
