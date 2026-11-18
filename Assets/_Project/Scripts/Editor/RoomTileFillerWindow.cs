@@ -159,7 +159,7 @@ public class RoomTileFillerWindow : EditorWindow
 
             if (int.TryParse(parts[0].Trim(), out int row) && int.TryParse(parts[1].Trim(), out int col))
             {
-                Vector3Int cellPos = new Vector3Int(col, -(row - 1), 0);
+                Vector3Int cellPos = new Vector3Int(col - 1, -(row - 1), 0);
 
                 Vector3 worldPos = targetGrid.CellToWorld(cellPos) + new Vector3(targetGrid.cellSize.x * 0.5f, targetGrid.cellSize.y * 0.5f, 0f);
 
