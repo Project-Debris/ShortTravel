@@ -108,7 +108,8 @@ public class PlayerAttack : MonoBehaviour
 
                     if (hit.TryGetComponent<EnemyHit>(out var enemyHit))
                     {
-                        enemyHit.TakeHit(attackDamage, transform.position, knockbackForce);
+                        Vector2 attackDirection = GetFacingDirection()==1 ? Vector2.right : Vector2.left;
+                        enemyHit.TakeHit(attackDamage, attackDirection, knockbackForce);//수정
                     }
                 }
             }
