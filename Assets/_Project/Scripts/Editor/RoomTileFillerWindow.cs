@@ -6,18 +6,23 @@ using UnityEngine.Tilemaps;
 
 public class RoomTileFillerWindow : EditorWindow
 {
-    const string DefaultDataDir   = "Assets/_Project/Data/Level";
-    const string DefaultWallTile  = "Assets/_Project/Art/Sprites/Greybox/Tiles/Tile_Platform.asset";
-    const string DefaultThinTile  = "Assets/_Project/Art/Sprites/Greybox/Tiles/Tile_PlatformThin.asset";
+    const string DefaultDataDir = "Assets/_Project/Data/Level";
+    const string DefaultWallTile = "Assets/_Project/Art/Sprites/Greybox/Tiles/Tile_Platform.asset";
+    const string DefaultThinTile = "Assets/_Project/Art/Sprites/Greybox/Tiles/Tile_PlatformThin.asset";
 
     const string WallSuffix = "_wall_ceiling.csv";
     const string ThinSuffix = "_platform_thin.csv";
+    const string DisappearSuffix = "_platform_disappear.csv";
+
     const string WallTilemapName = "Platform_Ceiling";
     const string ThinTilemapName = "Platform_Thin";
+    const string DisappearGroupName = "Platform_Disappearing";
 
     string dataDir = DefaultDataDir;
     TileBase wallTile;
     TileBase thinTile;
+    GameObject disappearPrefab;
+
     Grid targetGrid;
     string[] roomIds = new string[0];
     int roomIndex;
@@ -68,6 +73,8 @@ public class RoomTileFillerWindow : EditorWindow
         wallTile = (TileBase)EditorGUILayout.ObjectField("벽/천장 타일", wallTile, typeof(TileBase), false);
         thinTile = (TileBase)EditorGUILayout.ObjectField("얇은 플랫폼 타일", thinTile, typeof(TileBase), false);
 
+        disappearPrefab = (GameObject)EditorGUILayout.ObjectField("사라지는 발판 프리팹", disappearPrefab, typeof(GameObject), false);
+
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("대상", EditorStyles.boldLabel);
         targetGrid = (Grid)EditorGUILayout.ObjectField("Grid", targetGrid, typeof(Grid), true);
@@ -90,6 +97,7 @@ public class RoomTileFillerWindow : EditorWindow
     {
         int wall = FillLayer(Path.Combine(dataDir, roomId + WallSuffix), WallTilemapName, wallTile);
         int thin = FillLayer(Path.Combine(dataDir, roomId + ThinSuffix), ThinTilemapName, thinTile);
+        int disappear = FillPrefabLayer(Path.Combine(dataDir, roomId + DisappearSuffix), DisappearGroupName, disappearPrefab);
         Debug.Log($"[{roomId}] → {targetGrid.name}: 벽/천장 {wall}개, 얇은 플랫폼 {thin}개 배치 완료");
     }
 
@@ -98,7 +106,7 @@ public class RoomTileFillerWindow : EditorWindow
         var tilemap = GetOrCreateTilemap(tilemapName);
 
         Undo.RegisterCompleteObjectUndo(tilemap, "Fill " + tilemapName);
-        tilemap.ClearAllTiles();  
+        tilemap.ClearAllTiles();
 
         if (!File.Exists(csvPath))
         {
@@ -108,18 +116,63 @@ public class RoomTileFillerWindow : EditorWindow
 
         int count = 0;
         var lines = File.ReadAllLines(csvPath);
-        for (int i = 1; i < lines.Length; i++)  
+        for (int i = 1; i < lines.Length; i++)
         {
             var p = lines[i].Split(',');
             if (p.Length < 2) continue;
             if (!int.TryParse(p[0], out int row) || !int.TryParse(p[1], out int col)) continue;
 
-          
+
             tilemap.SetTile(new Vector3Int(col, -(row - 1), 0), tile);
             count++;
         }
 
         EditorUtility.SetDirty(tilemap);
+        return count;
+    }
+
+    int FillPrefabLayer(string csvPath, string groupName, GameObject prefab)
+    {
+        if (prefab == null || !File.Exists(csvPath)) return 0;
+
+        Transform existingGroup = targetGrid.transform.Find(groupName);
+        if (existingGroup != null)
+        {
+            Undo.DestroyObjectImmediate(existingGroup.gameObject);
+        }
+
+        GameObject groupObj = new GameObject(groupName);
+        Undo.RegisterCreatedObjectUndo(groupObj, "Create Disappear Group");
+        groupObj.transform.SetParent(targetGrid.transform, false);
+
+        int count = 0;
+        using var reader = new StreamReader(csvPath);
+        string header = reader.ReadLine();
+
+        while (!reader.EndOfStream)
+        {
+            string line = reader.ReadLine()?.Trim();
+            if (string.IsNullOrEmpty(line)) continue;
+
+            string[] parts = line.Split(',');
+            if (parts.Length < 2) continue;
+
+            if (int.TryParse(parts[0].Trim(), out int row) && int.TryParse(parts[1].Trim(), out int col))
+            {
+                Vector3Int cellPos = new Vector3Int(col, -(row - 1), 0);
+
+                Vector3 worldPos = targetGrid.CellToWorld(cellPos) + new Vector3(targetGrid.cellSize.x * 0.5f, targetGrid.cellSize.y * 0.5f, 0f);
+
+                GameObject instance = PrefabUtility.InstantiatePrefab(prefab, groupObj.transform) as GameObject;
+                if (instance != null)
+                {
+                    instance.transform.position = worldPos;
+                    Undo.RegisterCreatedObjectUndo(instance, "Spawn Disappear Platform");
+                    count++;
+                }
+            }
+        }
+
         return count;
     }
 
