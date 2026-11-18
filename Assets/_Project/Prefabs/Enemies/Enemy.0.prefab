@@ -403,7 +403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PinEnemy
   lookInterval: 2
   detectRange: 6
-  viewAngle: 60
+  viewAngle: 150
   alertDuration: 0.5
   alertMark: {fileID: 0}
   aimDuration: 0.5
@@ -452,7 +452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PinLauncher
   pinPrefab: {fileID: 5905126746044608848, guid: 8ad5ceab719eaf24fbf69296153c19e2, type: 3}
-  pinSpeed: 10
+  pinSpeed: 30
   pinDamage: 10
   firePoint: {fileID: 0}
 --- !u!114 &2265734393211624232
