@@ -45,7 +45,7 @@ public class Projectile : MonoBehaviour
     {
         if (collision.TryGetComponent<PlayerHit>(out var playerHit))
         {
-            playerHit.TakeHit(damage, transform.position, knockbackForce);
+            playerHit.TakeHit(damage, rb.linearVelocity.normalized, knockbackForce);//수정
             Destroy(gameObject);
         }
         // 지형에 부딫히면 파괴
