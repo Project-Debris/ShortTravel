@@ -2,6 +2,7 @@ using UnityEngine;
 
 public enum PinEnemyState { Idle, Alert, Aim, Lock, Recover, Stunned, Dead }
 
+[RequireComponent(typeof(PinLauncher), typeof(PinAimTelegraph))]
 public class PinEnemy : Enemy
 {
     [Header("1. 대기")]
@@ -11,6 +12,8 @@ public class PinEnemy : Enemy
 
     [Header("2. 발견")]
     [SerializeField] private float alertDuration = 0.5f;
+    [Tooltip("발견 반응")]
+    [SerializeField] private GameObject alertMark;
 
     [Header("3. 추적 조준")]
     [SerializeField] private float aimDuration = 0.5f;
@@ -25,10 +28,11 @@ public class PinEnemy : Enemy
 
     private PinEnemyState state;
     private SpriteRenderer spriteRenderer;
-    private int blockLayer;
+    private int groundLayer;
     private float stateTimer;
     private Vector2 aimDirection;
-    private PinLauncher pinAttack;
+    private PinLauncher launcher;
+    private PinAimTelegraph aimTelegraph;
     private PartSteal partSteal;
 
 
@@ -36,19 +40,25 @@ public class PinEnemy : Enemy
     {
         base.Awake();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        pinAttack = GetComponent<PinLauncher>();
+        launcher = GetComponent<PinLauncher>();
+        aimTelegraph = GetComponent<PinAimTelegraph>();
         partSteal = GetComponent<PartSteal>();
-        blockLayer = LayerMask.GetMask("Block");
+        groundLayer = LayerMask.GetMask("Ground");
+        SetAlertMark(false);
     }
 
     private void Update()
     {
-        if (state != PinEnemyState.Dead && health.IsDead)
+        if (state == PinEnemyState.Dead) return;
+
+        if (health.IsDead)
         {
             ChangeState(PinEnemyState.Dead);
             partSteal.BeginSteal();
+            return;
         }
-        else if (state != PinEnemyState.Stunned && hit.IsStunned)
+
+        if (state != PinEnemyState.Stunned && hit.IsStunned)
             ChangeState(PinEnemyState.Stunned);
 
         stateTimer += Time.deltaTime;
@@ -61,7 +71,6 @@ public class PinEnemy : Enemy
             case PinEnemyState.Lock: Lock(); break;
             case PinEnemyState.Recover: Recover(); break;
             case PinEnemyState.Stunned: Stunned(); break;
-            case PinEnemyState.Dead: Dead(); break;
         }
     }
 
@@ -73,7 +82,7 @@ public class PinEnemy : Enemy
             stateTimer = 0f;
         }
 
-        Vector2 toPlayer = player.position - transform.position;
+        Vector2 toPlayer = ToPlayer();
         Vector2 facing = spriteRenderer.flipX ? Vector2.left : Vector2.right;
 
         if (Vector2.Angle(facing, toPlayer) <= viewAngle * 0.5f && CanSeePlayer(toPlayer))
@@ -85,21 +94,24 @@ public class PinEnemy : Enemy
 
     private void Alert()
     {
-        if (!Track()) { ChangeState(PinEnemyState.Idle); return; }
+        TrackPlayer();
         if (stateTimer >= alertDuration) ChangeState(PinEnemyState.Aim);
     }
 
     private void Aim()
     {
-        if (!Track()) { ChangeState(PinEnemyState.Idle); return; }
+        TrackPlayer();
+        aimTelegraph.ShowTracking(launcher.FirePosition, aimDirection);
+
         if (stateTimer >= aimDuration) ChangeState(PinEnemyState.Lock);
     }
 
     private void Lock()
     {
+        aimTelegraph.ShowLocked(launcher.FirePosition, aimDirection, stateTimer, lockDuration - stateTimer);
         if (stateTimer < lockDuration) return;
 
-        pinAttack.PinAttack(aimDirection);
+        launcher.PinAttack(aimDirection);
         ChangeState(PinEnemyState.Recover);
     }
 
@@ -113,38 +125,38 @@ public class PinEnemy : Enemy
         if (!hit.IsStunned) ResumeCombat();
     }
 
-    private void Dead()
-    {
-
-    }
-
     private void ChangeState(PinEnemyState next)
     {
         state = next;
         stateTimer = 0f;
+        aimTelegraph.Hide();
+        SetAlertMark(next == PinEnemyState.Alert);
     }
 
-    private bool Track()
+    private void TrackPlayer()
     {
-        Vector2 toPlayer = player.position - transform.position;
-        bool canSee = CanSeePlayer(toPlayer);
-        if (canSee) aimDirection = toPlayer;
+        Vector2 toPlayer = ToPlayer();
+        if (CanSeePlayer(toPlayer)) aimDirection = toPlayer;
 
         spriteRenderer.flipX = aimDirection.x < 0;
-        Debug.DrawRay(transform.position, aimDirection, canSee ? Color.blue : Color.gray);
-        return canSee;
     }
+
+    private Vector2 ToPlayer() => (Vector2)player.position - launcher.FirePosition;
 
     private bool CanSeePlayer(Vector2 toPlayer)
     {
         return toPlayer.sqrMagnitude <= detectRange * detectRange
-            && !Physics2D.Raycast(transform.position, toPlayer, toPlayer.magnitude, blockLayer);
+            && !Physics2D.Raycast(launcher.FirePosition, toPlayer, toPlayer.magnitude, groundLayer);
     }
 
     private void ResumeCombat()
     {
-        Vector2 toPlayer = player.position - transform.position;
-        ChangeState(CanSeePlayer(toPlayer) ? PinEnemyState.Aim : PinEnemyState.Idle);
+        ChangeState(CanSeePlayer(ToPlayer()) ? PinEnemyState.Aim : PinEnemyState.Idle);
+    }
+
+    private void SetAlertMark(bool visible)
+    {
+        if (alertMark != null) alertMark.SetActive(visible);
     }
 
 
