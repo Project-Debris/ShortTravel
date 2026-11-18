@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -9,6 +10,7 @@ public class RoomTileFillerWindow : EditorWindow
     const string DefaultDataDir = "Assets/_Project/Data/Level";
     const string DefaultWallTile = "Assets/_Project/Art/Sprites/Greybox/Tiles/Tile_Platform.asset";
     const string DefaultThinTile = "Assets/_Project/Art/Sprites/Greybox/Tiles/Tile_PlatformThin.asset";
+    const string DefaultDisappearPrefab = "Assets/_Project/Prefabs/Levels/DisappearingPlatform.prefab";
 
     const string WallSuffix = "_wall_ceiling.csv";
     const string ThinSuffix = "_platform_thin.csv";
@@ -34,6 +36,7 @@ public class RoomTileFillerWindow : EditorWindow
     {
         if (wallTile == null) wallTile = AssetDatabase.LoadAssetAtPath<TileBase>(DefaultWallTile);
         if (thinTile == null) thinTile = AssetDatabase.LoadAssetAtPath<TileBase>(DefaultThinTile);
+        if (disappearPrefab == null) disappearPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(DefaultDisappearPrefab);
         RefreshRooms();
     }
 
@@ -95,10 +98,16 @@ public class RoomTileFillerWindow : EditorWindow
 
     void Fill(string roomId)
     {
+        Selection.activeGameObject = targetGrid.gameObject;
+        GUIUtility.hotControl = 0;
+        GUIUtility.keyboardControl = 0;
+
+        Undo.RegisterFullObjectHierarchyUndo(targetGrid.gameObject, "Fill Room Tiles");
+
         int wall = FillLayer(Path.Combine(dataDir, roomId + WallSuffix), WallTilemapName, wallTile);
         int thin = FillLayer(Path.Combine(dataDir, roomId + ThinSuffix), ThinTilemapName, thinTile);
         int disappear = FillPrefabLayer(Path.Combine(dataDir, roomId + DisappearSuffix), DisappearGroupName, disappearPrefab);
-        Debug.Log($"[{roomId}] → {targetGrid.name}: 벽/천장 {wall}개, 얇은 플랫폼 {thin}개 배치 완료");
+        Debug.Log($"[{roomId}] → {targetGrid.name}: 벽/천장 {wall}개, 얇은 플랫폼 {thin}개, 사라지는 플랫폼 {disappear}개 배치 완료");
     }
 
     int FillLayer(string csvPath, string tilemapName, TileBase tile)
@@ -138,7 +147,8 @@ public class RoomTileFillerWindow : EditorWindow
         Transform existingGroup = targetGrid.transform.Find(groupName);
         if (existingGroup != null)
         {
-            Undo.DestroyObjectImmediate(existingGroup.gameObject);
+            Selection.objects = Array.Empty<UnityEngine.Object>();
+            DestroyImmediate(existingGroup.gameObject);
         }
 
         GameObject groupObj = new GameObject(groupName);
@@ -167,7 +177,6 @@ public class RoomTileFillerWindow : EditorWindow
                 if (instance != null)
                 {
                     instance.transform.position = worldPos;
-                    Undo.RegisterCreatedObjectUndo(instance, "Spawn Disappear Platform");
                     count++;
                 }
             }
@@ -198,7 +207,7 @@ public class RoomTileFillerWindow : EditorWindow
         if (!go.TryGetComponent(out TilemapCollider2D tc)) tc = Undo.AddComponent<TilemapCollider2D>(go);
         if (!go.TryGetComponent(out CompositeCollider2D cc)) cc = Undo.AddComponent<CompositeCollider2D>(go);
 
-        Undo.RecordObjects(new Object[] { rb, tc, cc }, "Setup Tilemap Physics");
+        Undo.RecordObjects(new UnityEngine.Object[] { rb, tc, cc }, "Setup Tilemap Physics");
         rb.bodyType = RigidbodyType2D.Static;
         cc.geometryType = CompositeCollider2D.GeometryType.Polygons;
 #if UNITY_6000_0_OR_NEWER
