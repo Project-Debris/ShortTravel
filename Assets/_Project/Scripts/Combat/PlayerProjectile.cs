@@ -2,7 +2,7 @@
 public class PlayerProjectile : MonoBehaviour
 {
     [Header("기본 설정")]
-    [SerializeField] private float speed = 10f;
+    [SerializeField] private float speed = 30f;
     [SerializeField] private int damage = 10;
     [SerializeField] private float lifeTime = 5f;
     [SerializeField] private float knockbackForce = 3f;
