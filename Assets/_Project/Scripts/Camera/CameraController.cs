@@ -17,7 +17,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float followTime = 0.4f;
     [SerializeField] private float remainRatio = 0.1f;
 
-    [Header("둘러보기")] 
+    [Header("둘러보기")]
     [SerializeField] private float lookHoldTime = 0.4f;
     [Tooltip("몸 높이(H) 배수")]
     [SerializeField] private float lookUpDistance = 3f;
@@ -25,7 +25,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float lookDownDistance = 3f;
 
     [Header("방 전환")]
-    [SerializeField] private float roomBlendTime = 0.5f;
+    [SerializeField] private float roomBlendTime = 0.3f;
+    [SerializeField] private float roomFollowTime = 0.1f;
 
     private float bodyHeight;
     private Vector2 standingCenterOffset;
@@ -39,9 +40,10 @@ public class CameraController : MonoBehaviour
     private float lookHoldTimer;
     private float lookOffsetY;
 
-    private Room clampRoom;         
-    private Bounds blendFrom;       
+    private Room clampRoom;
+    private Bounds blendFrom;
     private float roomBlendTimer;
+    private float roomFollowTimer = float.MaxValue;
 
 
     private void Awake()
@@ -67,12 +69,13 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        float t = 1f - Mathf.Pow(remainRatio, Time.deltaTime / followTime);
+        UpdateRoomBlend();
+
+        float t = 1f - Mathf.Pow(remainRatio, Time.deltaTime / CurrentFollowTime());
 
         UpdateFacing(player.MoveInput);
         lookAheadX = Mathf.Lerp(lookAheadX, facing * lookAhead * bodyHeight, t);
         lookOffsetY = Mathf.Lerp(lookOffsetY, UpdateLookTarget(), t);
-        UpdateRoomBlend();
 
         transform.position = ClampToRoom(Vector3.Lerp(transform.position, TargetPosition(), t));
     }
@@ -84,8 +87,9 @@ public class CameraController : MonoBehaviour
         lookAheadX = 0f;
         lookHoldTimer = 0f;
         lookOffsetY = 0f;
-        clampRoom = Room.Current;        
+        clampRoom = Room.Current;
         roomBlendTimer = roomBlendTime;
+        roomFollowTimer = float.MaxValue;
         transform.position = TargetPosition();
     }
 
@@ -137,10 +141,15 @@ public class CameraController : MonoBehaviour
             clampRoom = room;
             blendFrom = new Bounds(transform.position, ViewSize());
             roomBlendTimer = isFirstRoom ? roomBlendTime : 0f;
+            roomFollowTimer = isFirstRoom ? float.MaxValue : 0f;
         }
 
         roomBlendTimer += Time.deltaTime;
+        roomFollowTimer += Time.deltaTime;
     }
+
+    private float CurrentFollowTime() =>
+        roomFollowTimer < roomBlendTime ? roomFollowTime : followTime;
 
 
     private Vector3 ClampToRoom(Vector3 position)
