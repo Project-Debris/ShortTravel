@@ -59,7 +59,7 @@ public class Room : MonoBehaviour
         Debug.Log($"[{roomId}] 퇴장");
     }
 
-    private void RespawnEnemies()
+    public void RespawnEnemies()//public으로 수정
     {
         foreach (GameObject enemy in spawnedEnemies)
         {
