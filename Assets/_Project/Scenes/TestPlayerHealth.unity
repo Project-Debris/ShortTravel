@@ -1022,6 +1022,9 @@ GameObject:
   - component: {fileID: 1811862821}
   - component: {fileID: 1811862820}
   - component: {fileID: 1811862819}
+  - component: {fileID: 1811862824}
+  - component: {fileID: 1811862823}
+  - component: {fileID: 1811862825}
   - component: {fileID: 1811862817}
   - component: {fileID: 1811862818}
   m_Layer: 0
@@ -1253,6 +1256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   attackDamage: 10
+  knockbackForce: 3
   startupDelay: 0.08
   activeDuration: 0.1
   recoveryDelay: 0.17
@@ -1290,6 +1294,46 @@ MonoBehaviour:
   isJumping: 0
   isGrounded: 0
   isTouchingCeiling: 0
+--- !u!114 &1811862823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811862812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e15d619a3a4ab5c42ba8abb6ef9e357c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PartSlot
+  pinPrefab: {fileID: 0}
+  pinSpeed: 10
+  pinDamage: 10
+--- !u!114 &1811862824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811862812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c188901db90d273408b5d9192a20dd51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Respawn
+  spawnPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &1811862825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811862812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1463d71c2fdc664479487ea9800ae3aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDeath
 --- !u!114 &2017928560 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1878706963797807430, guid: 1c76f01afb07add4bb62c0c0a288a683, type: 3}
