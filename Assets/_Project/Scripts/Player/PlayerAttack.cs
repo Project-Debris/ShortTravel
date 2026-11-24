@@ -8,6 +8,7 @@ public class PlayerAttack : MonoBehaviour
     [Header("컴포넌트")]
     private BoxCollider2D boxCollider;
     private PlayerHit playerHit;
+    private Health health;
     private Repair repair;
 
     [Header("공격 수치")]
@@ -40,6 +41,8 @@ public class PlayerAttack : MonoBehaviour
     void Awake()
     {
         boxCollider = GetComponent<BoxCollider2D>();
+
+        health = GetComponent<Health>();
         playerHit = GetComponent<PlayerHit>();
         repair = GetComponent<Repair>();
 
@@ -54,6 +57,11 @@ public class PlayerAttack : MonoBehaviour
     {
         inputActions.Player.Enable();
         inputActions.Player.Attack.started += OnAttackStarted;
+
+        if (health != null)
+        {
+            health.OnDeath += OnPlayerDied;
+        }
     }
 
     void OnDisable()
@@ -62,12 +70,22 @@ public class PlayerAttack : MonoBehaviour
 
         inputActions.Player.Attack.started -= OnAttackStarted;
         inputActions.Player.Disable();
+
+        if (health != null)
+        {
+            health.OnDeath -= OnPlayerDied;
+        }
     }
 
     private void OnAttackStarted(InputAction.CallbackContext context)
     {
         if (isAttacking || playerHit.IsStunned || repair.IsRepairing) return;
         attackCoroutine = StartCoroutine(AttackRoutine());
+    }
+
+    private void OnPlayerDied()
+    {
+        inputActions.Player.Disable();
     }
 
     private IEnumerator AttackRoutine()
@@ -108,7 +126,7 @@ public class PlayerAttack : MonoBehaviour
 
                     if (hit.TryGetComponent<EnemyHit>(out var enemyHit))
                     {
-                        Vector2 attackDirection = GetFacingDirection()==1 ? Vector2.right : Vector2.left;
+                        Vector2 attackDirection = GetFacingDirection() == 1 ? Vector2.right : Vector2.left;
                         enemyHit.TakeHit(attackDamage, attackDirection, knockbackForce);//수정
                     }
                 }

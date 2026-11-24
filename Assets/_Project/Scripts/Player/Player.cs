@@ -1,12 +1,14 @@
+using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
     [Header("컴포넌트")]
-    private Rigidbody2D rd;
+    private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
     private SpriteRenderer spriteRenderer;
+    private Health health;
     private PlayerHit playerHit;
     private Repair repair;
 
@@ -45,9 +47,11 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        rd = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        health = GetComponent<Health>();
         playerHit = GetComponent<PlayerHit>();
         repair = GetComponent<Repair>();
 
@@ -62,6 +66,11 @@ public class Player : MonoBehaviour
         inputActions.Player.Jump.started += OnJumpStarted;
         // 점프 키를 떼는 순간 OnJumpCanceled 함수 실행
         inputActions.Player.Jump.canceled += OnJumpCanceled;
+
+        if (health != null)
+        {
+            health.OnDeath += OnPlayerDied;
+        }
     }
 
     void OnDisable()
@@ -71,6 +80,11 @@ public class Player : MonoBehaviour
         inputActions.Player.Jump.canceled -= OnJumpCanceled;
 
         inputActions.Player.Disable();
+
+        if (health != null)
+        {
+            health.OnDeath -= OnPlayerDied;
+        }
     }
 
     void Update()
@@ -83,15 +97,15 @@ public class Player : MonoBehaviour
 
         CheckCollisions();
 
-        if (isGrounded && rd.linearVelocity.y <= 0.01f)
+        if (isGrounded && rb.linearVelocity.y <= 0.01f)
         {
             isJumping = false;
         }
 
         // 천장에 부딫힐 때
-        if (isTouchingCeiling && rd.linearVelocity.y > 0)
+        if (isTouchingCeiling && rb.linearVelocity.y > 0)
         {
-            rd.linearVelocity = new Vector2(rd.linearVelocity.x, 0f);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         }
 
         if (isGrounded)
@@ -123,27 +137,27 @@ public class Player : MonoBehaviour
         }
         else
         {
-            rd.linearVelocity = new Vector2(0f, rd.linearVelocity.y);
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
         }
 
         // 중력
-        if (rd.linearVelocity.y < 0)
+        if (rb.linearVelocity.y < 0)
         {
-            rd.gravityScale = fallGravity;
+            rb.gravityScale = fallGravity;
         }
-        else if (rd.linearVelocity.y > 0 && !isJumping)
+        else if (rb.linearVelocity.y > 0 && !isJumping)
         {
-            rd.gravityScale = jumpCutGravity;
+            rb.gravityScale = jumpCutGravity;
         }
-        else if (rd.linearVelocity.y > 0 && isJumping)
+        else if (rb.linearVelocity.y > 0 && isJumping)
         {
-            float progress = Mathf.InverseLerp(jumpForce, 0f, rd.linearVelocity.y);
+            float progress = Mathf.InverseLerp(jumpForce, 0f, rb.linearVelocity.y);
 
-            rd.gravityScale = Mathf.Lerp(jumpGravity, fallGravity, progress);
+            rb.gravityScale = Mathf.Lerp(jumpGravity, fallGravity, progress);
         }
         else
         {
-            rd.gravityScale = jumpGravity;
+            rb.gravityScale = jumpGravity;
         }
     }
 
@@ -158,16 +172,16 @@ public class Player : MonoBehaviour
     private void OnJumpCanceled(InputAction.CallbackContext context)
     {
         isJumping = false;
+    }
 
-        if (rd.linearVelocity.y > 0)
-        {
-
-        }
+    private void OnPlayerDied()
+    {
+        inputActions.Player.Disable();
     }
 
     private void ExecuteJump()
     {
-        rd.linearVelocity = new Vector2(rd.linearVelocity.x, jumpForce);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
         isJumping = inputActions.Player.Jump.IsPressed();
 
@@ -200,12 +214,12 @@ public class Player : MonoBehaviour
         float targetSpeed = moveInput * maxSpeed;
         float accelRate = (Mathf.Abs(moveInput) > 0.01f) ? acceleration : deceleration;
         float newSpeedX = Mathf.MoveTowards(
-            rd.linearVelocity.x,
+            rb.linearVelocity.x,
             targetSpeed,
             accelRate * Time.fixedDeltaTime
         );
 
-        rd.linearVelocity = new Vector2(newSpeedX, rd.linearVelocity.y);
+        rb.linearVelocity = new Vector2(newSpeedX, rb.linearVelocity.y);
     }
 
     // 충돌 감지 함수

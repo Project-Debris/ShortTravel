@@ -334,7 +334,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   healthBar: {fileID: 0}
   maxHealth: 100
-  currentHealth: 10
+  currentHealth: 100
   isDead: 0
 --- !u!114 &7514433396373298428
 MonoBehaviour:
