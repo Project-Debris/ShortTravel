@@ -86,4 +86,11 @@ public class PartSlot : MonoBehaviour
     {
         return spriteRenderer.flipX ? Vector2.left : Vector2.right;
     }
+
+    //추가
+    public void RemovePart()
+    {
+        RemainingUses = 0;
+        CurrentPart = PartType.None;
+    }
 }

@@ -49,4 +49,9 @@ public class RepairItemManager : MonoBehaviour
     {
         repairItemCount = Mathf.Min(repairItemCount + amount, maxRepairItemCount);
     }
+
+    public void AddMaxItems()
+    {
+        repairItemCount = maxRepairItemCount;
+    }
 }

@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Health : MonoBehaviour
@@ -11,6 +13,8 @@ public class Health : MonoBehaviour
 
     [Header("사망 상태")]
     [SerializeField] private bool isDead;
+
+    public event Action OnDeath;
 
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;
@@ -27,7 +31,10 @@ public class Health : MonoBehaviour
         currentHealth = Mathf.Max(0, CurrentHealth - damage);
 
         if (CurrentHealth <= 0)
-            isDead = true; //사망 상태 표시 -> 넉백 적용 x(PlayerHit, EnemyHit 스크립트에서 처리함), Die() 실행(어디서 처리할지 미정)
+        {
+            isDead = true;//사망 상태 표시 -> 넉백 적용 x(PlayerHit, EnemyHit 스크립트에서 처리함)
+            OnDeath?.Invoke();
+        }
 
         if (healthBar)
         {
@@ -41,5 +48,14 @@ public class Health : MonoBehaviour
         {
             healthBar.UpdateHealthBar(CurrentHealth, MaxHealth);
         }
+    }
+    public void HealToMax()
+    {
+        Heal(maxHealth);
+    }
+
+    public void Revive()
+    {
+        isDead = false;
     }
 }
