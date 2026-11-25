@@ -25,8 +25,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float lookDownDistance = 3f;
 
     [Header("방 전환")]
-    [SerializeField] private float roomBlendTime = 0.3f;
-    [SerializeField] private float roomFollowTime = 0.1f;
+    [SerializeField] private float roomBlendTime = 1.0f;
+    [SerializeField] private float roomFollowTime = 4.0f;
 
     private float bodyHeight;
     private Vector2 standingCenterOffset;
