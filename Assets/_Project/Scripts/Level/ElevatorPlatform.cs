@@ -75,9 +75,4 @@ public class ElevatorPlatform : MonoBehaviour
         transform.position = targetPos;
         currentState = arrivalState;
     }
-
-    void Update()
-    {
-
-    }
 }
